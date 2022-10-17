@@ -1,0 +1,201 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="brutalClass" version="4">
+  <OBJECT>
+    <ID name="brutalClass" mc="Standard.Package" uid="1990e8dc-7552-4941-9255-11e4e6963e12"/>
+    <PID name="BRUTAL" mc="Standard.Project" uid="2383c3e0-28ff-4fcc-9fa8-081d3c7991ba"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[brutalClass]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedBehavior">
+        <COMPID name="Interaction" mc="Standard.Interaction" uid="b6379834-0a36-4b4b-931f-a4bc157415d4"/>
+      </COMP>
+      <COMP relation="OwnedElement">
+        <COMPID name="Joueur" mc="Standard.Class" uid="c62fe805-356f-49ce-ad5e-95adf418e9c7"/>
+        <COMPID name="EtudiantBase" mc="Standard.Class" uid="359cce02-ebdb-4956-acac-eeb228840011"/>
+        <COMPID name="Zone" mc="Standard.Class" uid="88c512ce-c903-4c22-aa42-6166517109e3"/>
+        <OBJECT>
+          <ID name="ZoneNom" mc="Standard.Enumeration" uid="9e407a64-5c87-45d4-8b2a-c83bb28315bb"/>
+          <ATTRIBUTES>
+            <ATT name="IsElementary">true</ATT>
+            <ATT name="IsAbstract">false</ATT>
+            <ATT name="IsLeaf">false</ATT>
+            <ATT name="IsRoot">false</ATT>
+            <ATT name="Visibility">Public</ATT>
+            <ATT name="Name"><![CDATA[ZoneNom]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <COMP relation="Value">
+              <OBJECT>
+                <ID name="La bibliotheque" mc="Standard.EnumerationLiteral" uid="28e7c5dc-29ab-4733-999b-c7b6ff31258c"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[La bibliotheque]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="Le Bureau des Etudiants" mc="Standard.EnumerationLiteral" uid="79b4a495-31c4-459b-903a-5fd57b43fdfb"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[Le Bureau des Etudiants]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="Le Quartier Administratif" mc="Standard.EnumerationLiteral" uid="5c70ece2-7f26-499a-a82f-30ff13a82e00"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[Le Quartier Administratif]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="Les Halles industrielles" mc="Standard.EnumerationLiteral" uid="f487a6b4-4b4a-4537-91ba-63a91311b45f"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[Les Halles industrielles]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="La Halle Sportive" mc="Standard.EnumerationLiteral" uid="46253415-1962-4b30-ad8d-70b4e764cd33"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[La Halle Sportive]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Programme" mc="Standard.Enumeration" uid="db9f8989-b2ac-43f0-aaba-3f3dd5d800db"/>
+          <ATTRIBUTES>
+            <ATT name="IsElementary">true</ATT>
+            <ATT name="IsAbstract">false</ATT>
+            <ATT name="IsLeaf">false</ATT>
+            <ATT name="IsRoot">false</ATT>
+            <ATT name="Visibility">Public</ATT>
+            <ATT name="Name"><![CDATA[Programme]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <COMP relation="Value">
+              <OBJECT>
+                <ID name="ISI" mc="Standard.EnumerationLiteral" uid="d4673199-e686-4a6c-9b54-fa2b11a9cceb"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ISI]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="RT" mc="Standard.EnumerationLiteral" uid="d85a87c7-5d4c-4517-b5a8-67a7e0bf4872"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[RT]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="A2I" mc="Standard.EnumerationLiteral" uid="c1caff84-e6a2-415a-b4fe-d807763f0c3c"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[A2I]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="GI" mc="Standard.EnumerationLiteral" uid="c7a741c9-0549-4115-aa89-93f91f138ad1"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[GI]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="GM" mc="Standard.EnumerationLiteral" uid="5b24c2f9-7526-4647-86e5-c13e26d702f8"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[GM]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="MTE" mc="Standard.EnumerationLiteral" uid="fde985ca-8304-4726-8ef1-0e969c954170"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[MTE]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="MM" mc="Standard.EnumerationLiteral" uid="b2010e33-4467-4838-840c-c90b5f14bfd2"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[MM]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+          </DEPENDENCIES>
+        </OBJECT>
+        <COMPID name="EtudiantElite" mc="Standard.Class" uid="663c8de0-4b61-4390-ad67-2f39e3da3b4f"/>
+        <COMPID name="MaitreGobi" mc="Standard.Class" uid="0d32ddc1-a92c-46f8-8953-f49171e3e9db"/>
+        <COMPID name="Etudiant" mc="Standard.Class" uid="3f8e29bc-0a0f-4661-953d-4a2d5af44e15"/>
+        <COMPID name="Commencement" mc="Standard.Class" uid="6c83e678-7c4b-4333-b6aa-20effa34b704"/>
+        <OBJECT>
+          <ID name="Strategie" mc="Standard.Enumeration" uid="24e907a8-a1a5-4d4a-bb61-cc23de205ce1"/>
+          <ATTRIBUTES>
+            <ATT name="IsElementary">true</ATT>
+            <ATT name="IsAbstract">false</ATT>
+            <ATT name="IsLeaf">false</ATT>
+            <ATT name="IsRoot">false</ATT>
+            <ATT name="Visibility">Public</ATT>
+            <ATT name="Name"><![CDATA[Strategie]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <COMP relation="Value">
+              <OBJECT>
+                <ID name="defensive" mc="Standard.EnumerationLiteral" uid="0a98b0c4-b1f7-4ea1-8f3b-93b0e8d63266"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[defensive]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="offensive" mc="Standard.EnumerationLiteral" uid="44e1242a-7c35-4db7-ab56-02320f15b41f"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[offensive]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name="aleatoire" mc="Standard.EnumerationLiteral" uid="2cd37f02-ceda-4d06-830f-5bb0e58d8117"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[aleatoire]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+          </DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+      <COMP relation="Product">
+        <COMPID name="brutal Class diagram" mc="Standard.ClassDiagram" uid="f4c3cefb-d989-49c4-a256-f99ac1fa0b5b"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
