@@ -1,0 +1,5 @@
+package student;
+
+public enum Attribute {
+    CATEGORY, RESISTANCE, FORCE, DEXTERITE, INITIATIVE, CONSTITUTION, SIZE_OF_ATTRIBUTE;
+}

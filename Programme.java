@@ -1,5 +1,5 @@
-package Brutal;
+package student;
 
 public enum Programme {
-    ISI,RT,A2I,GI,GM,MTE,MM;
+    ISI, RT, A2I, GI, GM, MTE, MM;
 }
