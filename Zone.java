@@ -1,54 +1,41 @@
 package student;
 
-import Brutal.Zonename;
-import student.Student;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Zone {
-    private Zonename zoneName;
-    private ArrayList<Student> studentsOfPlayerA;
-    private ArrayList<Student> studentsOfPlayerB;
+    private ZoneName zoneName;
 
-    public void addStudent(Student student, char player) {
-        if (player == 'a') {
-            if (!this.studentsOfPlayerA.contains(student))
-                this.studentsOfPlayerA.add(student);
-        } else if (player == 'b') {
-            if (!this.studentsOfPlayerB.contains(student))
-                this.studentsOfPlayerB.add(student);
+    private ArrayList<Student>[] students = new ArrayList[Players.NUM_PLAYERS.ordinal()];
+
+    public Zone(ZoneName zoneName) {
+        this.zoneName = zoneName;
+        for (int i = 0; i < this.students.length; i++) {
+            students[i] = new ArrayList<Student>();
         }
     }
 
-    private void delStudent() {
-        for(Student s:this.studentsOfPlayerA){
-            if(s.isDead()){
-                this.studentsOfPlayerA.remove(s);
-                //print
-            }
+    public void addStudent(Student student, Players p) {
+        if (!this.students[p.ordinal()].contains(student)) {
+            this.students[p.ordinal()].add(student);
         }
-        for(Student s:this.studentsOfPlayerB){
-            if(s.isDead()){
-                this.studentsOfPlayerB.remove(s);
+    }
+
+    private void delStudent(Players p) {
+        for (Student s : this.students[p.ordinal()]) {
+            if (s.isDead()) {
+                this.students[p.ordinal()].remove(s);
                 //print
             }
         }
     }
 
-    private Student findLow(ArrayList<Student> students){
-        Student ret = null;
-        Iterator<Student> it = students.iterator();
-        while(it.hasNext()){
+    private Student findLowest(Players p) {
+        ListIterator<Student> it = students[p.ordinal()].listIterator();
+        while (it.hasNext() && it.next().isDead()) ;
+        Student ret = it.hasPrevious() ? it.previous() : null;
+        while (it.hasNext()) {
             Student tmp = it.next();
-            if(!tmp.isDead()){
-                ret = tmp;
-                break;
-            }
-        }
-        while(it.hasNext()){
-            Student tmp = it.next();
-            if(!tmp.isDead() && ret.getCreditsECTS() > tmp.getCreditsECTS()){
+            if (!tmp.isDead() && ret.getCreditsECTS() > tmp.getCreditsECTS()) {
                 ret = tmp;
             }
         }
@@ -56,67 +43,60 @@ public class Zone {
     }
 
     public void fight() {
-        Collections.sort(this.studentsOfPlayerA);
-        Collections.sort(this.studentsOfPlayerB);
-        boolean isStop = false;
-        while(! isStop){
-            Iterator<Student> itA = this.studentsOfPlayerA.iterator();
-            Iterator<Student> itB = this.studentsOfPlayerB.iterator();
-
-            if(!itA.hasNext() || !itB.hasNext()) {
-                isStop = true;
-            }
-            while (itA.hasNext() && itB.hasNext()) {
+        for (int i = 0; i < Players.NUM_PLAYERS.ordinal(); i++) {
+            Collections.sort(this.students[i]);
+        }
+        int sizeA = this.students[Players.A.ordinal()].size(),
+                sizeB = this.students[Players.B.ordinal()].size();
+        while (sizeA != 0 || sizeB != 0) {
+            int pa = 0, pb = 0;
+            while (pa < sizeA && pb < sizeB) {
                 boolean isAFirst;
-                Student a = itA.next();
-                Student b = itB.next();
-                if(a.compareTo(b) > 0){
+                Student a = this.students[Players.A.ordinal()].get(pa);
+                Student b = this.students[Players.B.ordinal()].get(pb);
+                if (a.compareTo(b) > 0) {
                     isAFirst = true;
                 } else if (a.compareTo(b) < 0) {
                     isAFirst = false;
-                }else{
-                    isAFirst = (int)Math.round(Math.random()) != 0;
+                } else {
+                    isAFirst = (int) Math.round(Math.random()) != 0;
                 }
-
-                if(isAFirst){
-                    Student lowestB = findLow(this.studentsOfPlayerB);
-                    a.act(lowestB);
-                    Student lowestA = findLow(this.studentsOfPlayerA);
-                    b.act(lowestA);
-                }else{
-                    Student lowestA = findLow(this.studentsOfPlayerA);
-                    b.act(lowestA);
-                    Student lowestB = findLow(this.studentsOfPlayerB);
-                    a.act(lowestB);
+                if (isAFirst) {
+                    Student low = findLowest(Players.B);
+                    if (!a.isDead()) a.act(b);
+                    pa++;
+                } else {
+                    Student low = findLowest(Players.A);
+                    if (!b.isDead()) b.act(a);
+                    pb++;
                 }
-                delStudent();
-            }
-            while (itA.hasNext()){
-                Student a = itA.next();
-                Student lowestB = findLow(this.studentsOfPlayerB);
-                a.act(lowestB);
-                delStudent();
-            }
-            while(itB.hasNext()){
-                Student b = itB.next();
-                Student lowestA = findLow(this.studentsOfPlayerA);
-                b.act(lowestA);
-                delStudent();
+                delStudent(Players.A);
+                delStudent(Players.B);
+                while (pa < sizeA) {
+                    Student low = findLowest(Players.B);
+                    if (!a.isDead()) a.act(b);
+                    pa++;
+                }
+                delStudent(Players.B);
+                while (pb < sizeB) {
+                    Student low = findLowest(Players.A);
+                    if (!b.isDead()) b.act(a);
+                    pb++;
+                }
+                delStudent(Players.A);
             }
         }
-
     }
 
     public ArrayList<Student> getStudentsOfPlayerA() {
-        return studentsOfPlayerA;
+        return this.students[Players.A.ordinal()];
     }
 
     public ArrayList<Student> getStudentsOfPlayerB() {
-        return studentsOfPlayerB;
+        return this.students[Players.B.ordinal()];
     }
 
     public static void main(String[] args) {
-
     }
 
 }
