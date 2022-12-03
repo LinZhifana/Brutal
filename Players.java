@@ -1,5 +1,5 @@
-package student;
+package game;
 
 public enum Players {
-    A,B,NUM_PLAYERS;
+    A,B;
 }

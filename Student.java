@@ -1,68 +1,58 @@
-package student;
+package game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Student implements Comparable<Student> {
     private static final int[][] INITIAL_VALUES = {{0, 0}, {1, 5}, {2, 10}};
-
-    private Category category;
+    private int attributeLength = Attribute.values().length;
+    private int[] attributes = new int[attributeLength];
     private boolean isReservist = false;
-    private int creditsECTS = 30;
-    private int resistance = 0;     // 防御 0-10
-    private int force = 0;          // 力量 0-10
-    private int dexterite = 0;      // 敏捷 0-10
-    private int constitution = 0;   // 生命值上限 0-10
-    private int initiative = 0;     // 主动性（决定行动顺序） 0-10
-    private Strategy strategy;
-    private int next = (int) Math.random();
+    private int nextAct = (int) Math.round(Math.random());
 
     public Student(ArrayList<Integer> points) {
-        if (points.size() == Attribute.SIZE_OF_ATTRIBUTE.ordinal()) {
-            this.category = Category.values()[points.get(Attribute.CATEGORY.ordinal()).intValue()];
-            this.resistance = points.get(Attribute.RESISTANCE.ordinal()) + INITIAL_VALUES[this.category.ordinal()][0];
-            this.force = points.get(Attribute.FORCE.ordinal()) + INITIAL_VALUES[this.category.ordinal()][0];
-            this.dexterite = points.get(Attribute.DEXTERITE.ordinal()) + INITIAL_VALUES[this.category.ordinal()][0];
-            this.constitution = points.get(Attribute.CONSTITUTION.ordinal()) + INITIAL_VALUES[this.category.ordinal()][1];
-            this.initiative = points.get(Attribute.INITIATIVE.ordinal()) + INITIAL_VALUES[this.category.ordinal()][0];
-            this.creditsECTS = 30 + this.constitution;
-        } else {
-            System.out.println("ArrayList<Integer> points.length is not 6");
+        if (points.size() == this.attributeLength - 1) {
+
+            for (int i = 0; i < this.attributeLength - 1; i++) {
+                Attribute a = Attribute.values()[i];
+                if (a == Attribute.CATEGORY || a == Attribute.STRATEGY)
+                    this.attributes[a.ordinal()] = points.get(a.ordinal()).intValue();
+                else
+                    this.attributes[a.ordinal()] = points.get(a.ordinal()).intValue() + INITIAL_VALUES[getCategory().ordinal()][0];
+            }
+            this.attributes[Attribute.CONSTITUTION.ordinal()] = points.get(Attribute.CONSTITUTION.ordinal()).intValue() + INITIAL_VALUES[getCategory().ordinal()][1];
+            this.attributes[Attribute.CREDITS_ECTS.ordinal()] = getConstitution() + 30;
+        }
+        else {
+            System.out.println("输入数组长度不对");
         }
     }
 
     private int cure(Student student) {
         int x = (int) (Math.random() * 101), z = 0;
-        if (x <= 20 + 6 * this.dexterite) {
+        if (x <= 20 + 6 * this.getDexterite()) {
             double y = ((Math.random() * 610) + 1) / 1000;
-            z = (int) Math.floor(y * (student.constitution + 10));
+            z = (int) Math.floor(y * (getConstitution() + 10));
         }
-        return z < student.constitution + 30 ? z : student.constitution + 30;
+        return z < getConstitution() + 30 ? z : getConstitution() + 30;
     }
 
     private int attack(Student student) {
         int x = (int) (Math.random() * 101), z = 0;
         double coefficient = 0;
-        double reference = 0.5; // 默认10
-        if (x <= 40 + 3 * this.dexterite) {
+        double reference = 10; // 默认10
+        if (x <= 40 + 3 * getDexterite()) {
             double y = ((Math.random() * 1000) + 1) / 1000;
-            coefficient = Math.max(0, Math.min(100, 10 * this.force - 5 * student.resistance));
+            coefficient = Math.max(0, Math.min(100, 10 * getForce() - 5 * getResistance())) / 100;
             z = (int) Math.floor(y * (1 + coefficient) * reference);
         }
         return z;
     }
 
-    public int compareTo(Student s) {
-        return this.initiative - s.initiative;
-    }
-
-    public boolean isDead() {
-        return this.creditsECTS <= 0;
-    }
-
     public int act(Student student) {
         int ret = 0;
         if (student != null) {
-            switch (this.strategy) {
+            switch (getStrategy()) {
                 case OFFENSIVE:
                     ret = attack(student);
                     break;
@@ -70,62 +60,96 @@ public class Student implements Comparable<Student> {
                     ret = cure(student);
                     break;
                 case RANDOM:
-                    ret = this.next != 0 ? attack(student) : cure(student);
-                    this.next ^= 1;
+                    ret = this.nextAct != 0 ? attack(student) : cure(student);
+                    this.nextAct ^= 1;
                     break;
             }
         }
         return ret;
     }
 
-    public Category getCategory() {
-        return category;
+    public boolean isDead() {
+        return getCreditsECTS() <= 0;
     }
 
     public boolean isReservist() {
         return isReservist;
     }
 
+    //getter
     public int getCreditsECTS() {
-        return creditsECTS;
+        return this.attributes[Attribute.CREDITS_ECTS.ordinal()];
     }
 
     public int getResistance() {
-        return resistance;
+        return this.attributes[Attribute.RESISTANCE.ordinal()];
     }
 
     public int getForce() {
-        return force;
+        return this.attributes[Attribute.FORCE.ordinal()];
     }
 
     public int getDexterite() {
-        return dexterite;
+        return this.attributes[Attribute.DEXTERITE.ordinal()];
     }
 
     public int getConstitution() {
-        return constitution;
+        return this.attributes[Attribute.CONSTITUTION.ordinal()];
     }
 
     public int getInitiative() {
-        return initiative;
+        return this.attributes[Attribute.INITIATIVE.ordinal()];
     }
 
     public Strategy getStrategy() {
-        return strategy;
+        int i = this.attributes[Attribute.STRATEGY.ordinal()];
+        return Strategy.values()[i];
     }
 
-    public void setCreditsECTS(int creditsECTS) {
-        this.creditsECTS = creditsECTS;
+    public Category getCategory() {
+        int i = this.attributes[Attribute.CATEGORY.ordinal()];
+        return Category.values()[i];
     }
 
-    public void setStrategy(Strategy strategy) {
-        this.strategy = strategy;
+    public int getAttributeLength() {
+        return this.attributeLength;
     }
 
-    public void setReservist(boolean reservist) {
-        this.isReservist = reservist;
+    //setter
+    public void setStrategy(Strategy s) {
+        this.attributes[Attribute.STRATEGY.ordinal()] = s.ordinal();
+    }
+
+    public void setReservist(){
+        this.isReservist = true;
+    }
+
+    public void setCreditsECTS(int i){
+        this.attributes[Attribute.CREDITS_ECTS.ordinal()] = i;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+        result.append("Student : ");
+        int c = this.attributes[Attribute.values()[0].ordinal()];
+        int s = this.attributes[Attribute.values()[1].ordinal()];
+        result.append(Attribute.values()[0].name() + " : " + Category.values()[c].name() + " ");
+        result.append(Attribute.values()[1].name() + " : " + Strategy.values()[s].name() + " ");
+        for (int i = 2; i < this.attributeLength; i++) {
+            result.append(Attribute.values()[i].name() + " : " + this.attributes[Attribute.values()[i].ordinal()] + " ");
+        }
+        result.append(" | IS RESERVIST " + this.isReservist);
+        return result.toString();
+    }
+
+    public int compareTo(Student s) {
+        return getInitiative() - s.getInitiative();
     }
 
     public static void main(String args[]) {
+        ArrayList<Integer> p = new ArrayList<>(Arrays.asList(0, 1, 1, 4, 5, 6, 7));
+        Student s = new Student(p);
+        System.out.println(s.toString());
     }
 }

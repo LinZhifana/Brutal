@@ -1,4 +1,4 @@
-package student;
+package game;
 
 public enum Category {
     ETUDIANT, ETUDIANT_ELITE, MAITRE_GOBI;

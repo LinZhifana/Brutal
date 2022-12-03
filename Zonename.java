@@ -1,4 +1,4 @@
-package student;
+package game;
 
 public enum ZoneName {
     BIB("Bibliotheque"),
@@ -7,7 +7,6 @@ public enum ZoneName {
     HI("Halles industrielles"),
     HS("Halle sportive");
     private String name;
-
     private ZoneName(String name) {
         this.name = name;
     }

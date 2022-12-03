@@ -1,11 +1,11 @@
-package student;
+package game;
 
 import java.util.*;
 
 public class Zone {
     private ZoneName zoneName;
 
-    private ArrayList<Student>[] students = new ArrayList[Players.NUM_PLAYERS.ordinal()];
+    private ArrayList<Student>[] students = new ArrayList[Players.values().length];
 
     public Zone(ZoneName zoneName) {
         this.zoneName = zoneName;
@@ -23,8 +23,9 @@ public class Zone {
     private void delStudent(Players p) {
         for (Student s : this.students[p.ordinal()]) {
             if (s.isDead()) {
+                System.out.println(s.toString());
+                System.out.println("这个学生死了");
                 this.students[p.ordinal()].remove(s);
-                //print
             }
         }
     }
@@ -43,12 +44,13 @@ public class Zone {
     }
 
     public void fight() {
-        for (int i = 0; i < Players.NUM_PLAYERS.ordinal(); i++) {
+        for (int i = 0; i < Players.values().length; i++) {
             Collections.sort(this.students[i]);
         }
+
         int sizeA = this.students[Players.A.ordinal()].size(),
                 sizeB = this.students[Players.B.ordinal()].size();
-        while (sizeA != 0 || sizeB != 0) {
+        while (sizeA != 0 && sizeB != 0) {
             int pa = 0, pb = 0;
             while (pa < sizeA && pb < sizeB) {
                 boolean isAFirst;
@@ -63,28 +65,49 @@ public class Zone {
                 }
                 if (isAFirst) {
                     Student low = findLowest(Players.B);
-                    if (!a.isDead()) a.act(b);
+                    if (!a.isDead())
+                    {
+                        int pos = this.students[Players.B.ordinal()].indexOf(low);
+                        low.setCreditsECTS( low.getCreditsECTS() + a.act(low) );
+                        this.students[Players.B.ordinal()].set(pos,low);
+                    }
                     pa++;
                 } else {
                     Student low = findLowest(Players.A);
-                    if (!b.isDead()) b.act(a);
+                    if (!a.isDead())
+                    {
+                        int pos = this.students[Players.A.ordinal()].indexOf(low);
+                        low.setCreditsECTS( low.getCreditsECTS() + b.act(low) );
+                        this.students[Players.A.ordinal()].set(pos,low);
+                    }
                     pb++;
                 }
                 delStudent(Players.A);
                 delStudent(Players.B);
-                while (pa < sizeA) {
-                    Student low = findLowest(Players.B);
-                    if (!a.isDead()) a.act(b);
-                    pa++;
-                }
-                delStudent(Players.B);
-                while (pb < sizeB) {
-                    Student low = findLowest(Players.A);
-                    if (!b.isDead()) b.act(a);
-                    pb++;
-                }
-                delStudent(Players.A);
             }
+            while (pa < sizeA) {
+                Student a = this.students[Players.A.ordinal()].get(pa);
+                Student low = findLowest(Players.B);
+                if (!a.isDead())
+                {
+                    int pos = this.students[Players.B.ordinal()].indexOf(low);
+                    low.setCreditsECTS( low.getCreditsECTS() + a.act(low) );
+                    this.students[Players.B.ordinal()].set(pos,low);
+                }
+                pa++;
+            }
+            delStudent(Players.B);
+            while (pb < sizeB) {
+                Student b = this.students[Players.B.ordinal()].get(pb);
+                Student low = findLowest(Players.A);
+                {
+                    int pos = this.students[Players.A.ordinal()].indexOf(low);
+                    low.setCreditsECTS( low.getCreditsECTS() + b.act(low) );
+                    this.students[Players.A.ordinal()].set(pos,low);
+                }
+                pb++;
+            }
+            delStudent(Players.A);
         }
     }
 
@@ -96,7 +119,24 @@ public class Zone {
         return this.students[Players.B.ordinal()];
     }
 
+    boolean isDone() {
+        return this.students[Players.A.ordinal()].isEmpty() || this.students[Players.B.ordinal()].isEmpty();
+    }
+
+
+    public String toString(){
+        StringBuffer str = new StringBuffer("Zone : "+this.zoneName.name()+"\n");
+        for(int i = 0; i < Players.values().length;i++){
+            for (int j = 0; j < this.students[i].size(); j++) {
+                str.append(this.students[i].get(j).toString() + "\n");
+            }
+        }
+        return str.toString();
+    }
+
     public static void main(String[] args) {
+
+
     }
 
 }

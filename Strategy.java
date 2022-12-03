@@ -1,9 +1,6 @@
-package student;
-
-import java.util.Random;
+package game;
 
 public enum Strategy {
     //defensive,offensive,aleatoire;
     DEFENSIVE, OFFENSIVE, RANDOM;
-
 }

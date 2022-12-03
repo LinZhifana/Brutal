@@ -1,5 +1,12 @@
-package student;
+package game;
 
 public enum Attribute {
-    CATEGORY, RESISTANCE, FORCE, DEXTERITE, INITIATIVE, CONSTITUTION, SIZE_OF_ATTRIBUTE;
+    CATEGORY,
+    STRATEGY,
+    RESISTANCE,
+    FORCE,
+    DEXTERITE,
+    INITIATIVE,
+    CONSTITUTION,
+    CREDITS_ECTS;
 }
