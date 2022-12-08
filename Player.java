@@ -1,9 +1,5 @@
 package game;
 
-import game.Category;
-import student.Programme;
-
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,13 +7,15 @@ public class Player {
     private static final int NUM_OF_STU = 3;
     private static final int NUM_OF_RES = 2;
     private static final int MAX_POINT = 10;
-    private static final int TOTAL_POINT = 10;
+    private static final int TOTAL_POINT = 100;
     private static final int[] NUM_OF_EACH_STU_KIND = {1, 1, 1};
 
+    private static final int VICTORY_CONDITIONS = 3;
+
     private Programme programme;
-    private Players player;
+    private Gamers gamer;
     private ArrayList<Student> students = new ArrayList<Student>(NUM_OF_STU);
-    private ArrayList<ZoneName> zoneNames;
+    private ArrayList<ZoneName> zoneNames = new ArrayList<ZoneName>();
 
     private String createPrompt(Category cat) {
         StringBuffer prompt = new StringBuffer();
@@ -38,9 +36,9 @@ public class Player {
         return prompt.toString();
     }
 
-    //小于400
     private ArrayList<ArrayList<Integer>> allocatePoints() {
         int length = Attribute.values().length - 1;
+        int total = TOTAL_POINT;
         ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>(NUM_OF_STU);
         for (int i = 0; i < NUM_OF_STU; i++) {
             int[] points = new int[length];
@@ -53,7 +51,7 @@ public class Player {
                 c = Category.MAITRE_GOBI;
             }
             System.out.println(createPrompt(c));
-
+            System.out.println("剩余点数" + total);
             Scanner scanner = new Scanner(System.in);
             boolean isEnterWrong = false;
             String[] userPointsStr;
@@ -92,17 +90,24 @@ public class Player {
                     isEnterWrong = false;
                 }
             } while (isEnterWrong);
-
             ArrayList<Integer> ps = new ArrayList<Integer>(length);
-            for (int k : points) {
-                ps.add(k);
+            for (int j = 0; j < length; j++) {
+                if (j > Attribute.STRATEGY.ordinal()) {
+                    total -= points[j];
+                    if (total < 0) {
+                        i--;
+                        System.out.println("点数不足");
+                        continue;
+                    }
+                }
+                ps.add(points[j]);
             }
             ret.add(ps);
         }
         return ret;
     }
 
-    private boolean findDupicateInArray(String[] a) {
+    private boolean findDuplicateInArray(String[] a) {
         boolean ret = false;
         for (int j = 0; j < a.length; j++) {
             for (int k = j + 1; k < a.length; k++) {
@@ -117,8 +122,9 @@ public class Player {
         return ret;
     }
 
-    public Player(Players player) {
-        this.player = player;
+    public Player(Gamers gamer, Programme programme) {
+        this.gamer = gamer;
+        this.programme = programme;
         ArrayList<ArrayList<Integer>> points = allocatePoints();
         for (ArrayList<Integer> p : points) {
             this.students.add(new Student(p));
@@ -135,9 +141,7 @@ public class Player {
         this.students.remove(s);
     }
 
-    public void distributeStudent(Zone zone) {
-        System.out.println(this.toString());
-        //分配打印
+    private String[] checkInput(int arrayLength, int max, int min){
         Scanner scanner = new Scanner(System.in);
         boolean isEnterWrong = false;
         String[] userPointsStr;
@@ -151,15 +155,59 @@ public class Player {
             } else {
                 isEnterWrong = false;
             }
-            if (findDupicateInArray(userPointsStr)) {
+            if (findDuplicateInArray(userPointsStr)) {
                 System.out.println("有重复元素");
                 isEnterWrong = true;
                 continue;
             }
+
             for (String str : userPointsStr) {
                 int num = Integer.parseInt(str);
-                if (num > NUM_OF_STU || num <= 0) {
-                    System.out.println("数字不对" + NUM_OF_STU);
+                if (num > NUM_OF_STU || num <= 0 || reservists.contains(num)) {
+                    System.out.println("数字不对(包含预备役)" + num);
+                    isEnterWrong = true;
+                    break;
+                }
+                isEnterWrong = false;
+            }
+        } while (isEnterWrong);
+
+        return userPointsStr;
+    }
+
+    public void distributeStudent(Zone zone) {
+        System.out.println(this.toString());
+        //分配打印
+        Scanner scanner = new Scanner(System.in);
+        boolean isEnterWrong = false;
+        String[] userPointsStr;
+
+        ArrayList<Integer> reservists = new ArrayList<Integer>();
+        for (int i = 0; i < NUM_OF_STU; i++) {
+            if(this.students.get(i).isReservist()){
+                reservists.add(i + 1);
+            }
+        }
+
+        do {
+            userPointsStr = scanner.nextLine().split(",");
+            if (userPointsStr.length > NUM_OF_STU) {
+                System.out.println("数组长度错误" + NUM_OF_RES);
+                isEnterWrong = true;
+                continue;
+            } else {
+                isEnterWrong = false;
+            }
+            if (findDuplicateInArray(userPointsStr)) {
+                System.out.println("有重复元素");
+                isEnterWrong = true;
+                continue;
+            }
+
+            for (String str : userPointsStr) {
+                int num = Integer.parseInt(str);
+                if (num > NUM_OF_STU || num <= 0 || reservists.contains(num)) {
+                    System.out.println("数字不对(包含预备役)" + num);
                     isEnterWrong = true;
                     break;
                 }
@@ -172,8 +220,58 @@ public class Player {
             sArr[i] = this.students.get(Integer.parseInt(userPointsStr[i]) - 1);
         }
         for (Student s : sArr) {
-            zone.addStudent(s, this.player);
+            zone.addStudent(s, this.gamer);
             delStudent(s);
+        }
+    }
+
+    public void distributeStudent(Zone zone, ArrayList<Student> students) {
+        //分配打印
+        Scanner scanner = new Scanner(System.in);
+        boolean isEnterWrong = false;
+        String[] userPointsStr;
+        int numOfStu = students.size();
+        ArrayList<Integer> reservists = new ArrayList<Integer>();
+        for (int i = 0; i < numOfStu; i++) {
+            if(students.get(i).isReservist()){
+                reservists.add(i + 1);
+            }
+        }
+        // 打印预备役
+
+        do {
+            userPointsStr = scanner.nextLine().split(",");
+            if (userPointsStr.length > numOfStu) {
+                System.out.println("数组长度错误" + NUM_OF_RES);
+                isEnterWrong = true;
+                continue;
+            } else {
+                isEnterWrong = false;
+            }
+            if (findDuplicateInArray(userPointsStr)) {
+                System.out.println("有重复元素");
+                isEnterWrong = true;
+                continue;
+            }
+
+            for (String str : userPointsStr) {
+                int num = Integer.parseInt(str);
+                if (num > numOfStu || num <= 0 || reservists.contains(num)) {
+                    System.out.println("数字不对(包含预备役)" + num);
+                    isEnterWrong = true;
+                    break;
+                }
+                isEnterWrong = false;
+            }
+        } while (isEnterWrong);
+
+        Student[] sArr = new Student[userPointsStr.length];
+        for (int i = 0; i < userPointsStr.length; i++) {
+            sArr[i] = students.get(Integer.parseInt(userPointsStr[i]) - 1);
+        }
+        for (Student s : sArr) {
+            zone.addStudent(s, this.gamer);
+            students.remove(s);
         }
     }
 
@@ -195,7 +293,7 @@ public class Player {
                 isEnterWrong = false;
             }
 
-            if (findDupicateInArray(userPointsStr)) {
+            if (findDuplicateInArray(userPointsStr)) {
                 System.out.println("有重复元素");
                 isEnterWrong = true;
                 continue;
@@ -219,13 +317,126 @@ public class Player {
         }
     }
 
-    boolean isWin() {
-        return this.zoneNames.size() >= 3 ? true : false;
+    public void distributeReservist(Zone zone){
+        ArrayList<Integer> reservists = new ArrayList<Integer>();
+        for (int i = 0; i < NUM_OF_STU; i++) {
+            if(this.students.get(i).isReservist()){
+                reservists.add(i + 1);
+            }
+        }
+
+        if(reservists.size()>0){
+            // 分配预备役输出提示
+            Scanner scanner = new Scanner(System.in);
+            boolean isEnterWrong = false;
+            String[] userPointsStr;
+
+            do {
+                userPointsStr = scanner.nextLine().split(",");
+                if (userPointsStr.length > reservists.size()) {
+                    System.out.println("数组长度错误" + NUM_OF_RES);
+                    isEnterWrong = true;
+                    continue;
+                } else {
+                    isEnterWrong = false;
+                }
+                if (findDuplicateInArray(userPointsStr)) {
+                    System.out.println("有重复元素");
+                    isEnterWrong = true;
+                    continue;
+                }
+
+                for (String str : userPointsStr) {
+                    int num = Integer.parseInt(str);
+                    if (!reservists.contains(num)) {
+                        System.out.println("数字不对" + NUM_OF_STU);
+                        isEnterWrong = true;
+                        break;
+                    }
+                    isEnterWrong = false;
+                }
+            } while (isEnterWrong);
+
+            Student[] sArr = new Student[userPointsStr.length];
+            for (int i = 0; i < userPointsStr.length; i++) {
+                sArr[i] = this.students.get(Integer.parseInt(userPointsStr[i]) - 1);
+            }
+            for (Student s : sArr) {
+                zone.addStudent(s, this.gamer);
+                delStudent(s);
+            }
+        }
+
     }
 
+    public void redistribute(Zone zone, Zone[] zones){
+        ArrayList<Student> students = null;
+        if(this.gamer == Gamers.A){
+            students = zone.getStudentsOfPlayerA();
+        }else if(this.gamer == Gamers.B){
+            students = zone.getStudentsOfPlayerB();
+        }
+        if(!students.isEmpty()){
+            for (Student s: students) {
+                System.out.println(s.toString());
+            }
+            StringBuffer prompt = new StringBuffer();
+            for (Zone z:zones) {
+                prompt.append(z.getZoneName().getName() + " ");
+            }
+            System.out.println(prompt.toString());
+
+
+            //分配打印
+            Scanner scanner = new Scanner(System.in);
+            boolean isEnterWrong = false;
+            String[] userPointsStr;
+            int numOfStu = students.size();
+            ArrayList<Integer> reservists = new ArrayList<Integer>();
+            for (int i = 0; i < numOfStu; i++) {
+                if(students.get(i).isReservist()){
+                    reservists.add(i + 1);
+                }
+            }
+
+            do {
+                userPointsStr = scanner.nextLine().split(",");
+                if (userPointsStr.length > numOfStu) {
+                    System.out.println("数组长度错误" + NUM_OF_RES);
+                    isEnterWrong = true;
+                    continue;
+                } else {
+                    isEnterWrong = false;
+                }
+                if (findDuplicateInArray(userPointsStr)) {
+                    System.out.println("有重复元素");
+                    isEnterWrong = true;
+                    continue;
+                }
+
+                for (String str : userPointsStr) {
+                    int num = Integer.parseInt(str);
+                    if (num > numOfStu || num <= 0 || reservists.contains(num)) {
+                        System.out.println("数字不对(包含预备役)" + num);
+                        isEnterWrong = true;
+                        break;
+                    }
+                    isEnterWrong = false;
+                }
+            } while (isEnterWrong);
+        }
+    }
+
+    public void addZoneNames(ZoneName zoneName){
+        this.zoneNames.add(zoneName);
+    }
+
+    boolean isWin() {
+        return this.zoneNames.size() >= VICTORY_CONDITIONS ? true : false;
+    }
 
     public String toString() {
-        StringBuffer str = new StringBuffer("PLAYER :" + this.player.name() + "\n");
+        StringBuffer str = new StringBuffer("PLAYER :" + this.gamer.name() + "\n");
         int i = 0;
         for (Student s : this.students) {
             str.append((++i) + " : " + s.toString() + "\n");
@@ -234,7 +445,7 @@ public class Player {
     }
 
     public static void main(String args[]) {
-        Player p = new Player(Players.A);
+        Player p = new Player(Gamers.A, Programme.GI);
         Zone z = new Zone(ZoneName.HI);
         p.setReservist();
         p.distributeStudent(z);
