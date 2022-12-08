@@ -1,5 +1,5 @@
 package game;
 
-public enum Players {
+public enum Gamers {
     A,B;
 }

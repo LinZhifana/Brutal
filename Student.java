@@ -12,7 +12,6 @@ public class Student implements Comparable<Student> {
 
     public Student(ArrayList<Integer> points) {
         if (points.size() == this.attributeLength - 1) {
-
             for (int i = 0; i < this.attributeLength - 1; i++) {
                 Attribute a = Attribute.values()[i];
                 if (a == Attribute.CATEGORY || a == Attribute.STRATEGY)
@@ -145,11 +144,5 @@ public class Student implements Comparable<Student> {
 
     public int compareTo(Student s) {
         return getInitiative() - s.getInitiative();
-    }
-
-    public static void main(String args[]) {
-        ArrayList<Integer> p = new ArrayList<>(Arrays.asList(0, 1, 1, 4, 5, 6, 7));
-        Student s = new Student(p);
-        System.out.println(s.toString());
     }
 }
