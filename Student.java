@@ -21,8 +21,7 @@ public class Student implements Comparable<Student> {
             }
             this.attributes[Attribute.CONSTITUTION.ordinal()] = points.get(Attribute.CONSTITUTION.ordinal()).intValue() + INITIAL_VALUES[getCategory().ordinal()][1];
             this.attributes[Attribute.CREDITS_ECTS.ordinal()] = getConstitution() + 30;
-        }
-        else {
+        } else {
             System.out.println("输入数组长度不对");
         }
     }
@@ -45,12 +44,12 @@ public class Student implements Comparable<Student> {
             coefficient = Math.max(0, Math.min(100, 10 * getForce() - 5 * getResistance())) / 100;
             z = (int) Math.floor(y * (1 + coefficient) * reference);
         }
-        return z;
+        return -z;
     }
 
     public int act(Student student) {
         int ret = 0;
-        if (student != null) {
+        if (!student.isDead()) {
             switch (getStrategy()) {
                 case OFFENSIVE:
                     ret = attack(student);
@@ -119,12 +118,13 @@ public class Student implements Comparable<Student> {
         this.attributes[Attribute.STRATEGY.ordinal()] = s.ordinal();
     }
 
-    public void setReservist(){
+    public void setReservist() {
         this.isReservist = true;
     }
 
-    public void setCreditsECTS(int i){
-        this.attributes[Attribute.CREDITS_ECTS.ordinal()] = i;
+    public void setCreditsECTS(int i) {
+        this.attributes[Attribute.CREDITS_ECTS.ordinal()] =
+                i > 30 + getConstitution() ? 30 + getConstitution() : i;
     }
 
     @Override
@@ -143,6 +143,6 @@ public class Student implements Comparable<Student> {
     }
 
     public int compareTo(Student s) {
-        return getInitiative() - s.getInitiative();
+        return s.getInitiative() - this.getInitiative();
     }
 }

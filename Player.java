@@ -3,11 +3,11 @@ package game;
 import java.util.ArrayList;
 
 public class Player {
-    private static final int NUM_OF_STU = 3;
-    private static final int NUM_OF_RES = 2;
+    private static final int NUM_OF_STU = 20;
+    private static final int NUM_OF_RES = 5;
     private static final int MAX_POINT = 10;
-    private static final int TOTAL_POINT = 100;
-    private static final int[] NUM_OF_EACH_STU_KIND = {1, 1, 1};
+    private static final int TOTAL_POINT = 400;
+    private static final int[] NUM_OF_EACH_STU_KIND = {15, 4, 1};
     private static final int VICTORY_CONDITIONS = 3;
 
     private Programme programme;
@@ -52,11 +52,11 @@ public class Player {
                 c = Category.MAITRE_GOBI;
             System.out.println(createPrompt(c));
             //确定学生的策略
-            System.out.println("请先输入第" + (i + 1) + "个学生的策略");
+            System.out.println("Veuillez entrer la stratégie de l'étudiant " + (i + 1) );
             int s = MainProcess.checkInput(1, 1, 0, Strategy.values().length - 1)[0];
             //确定学生的点数
-            System.out.println("请输入第" + (i + 1) + "个学生的点数分配(五种)");
-            System.out.println("剩余点数分配 : " + total);
+            System.out.println("Veuillez attribuer des points à l'étudiant " + (i + 1) + "(cinq types)");
+            System.out.println("Les points restants: " + total);
             int[] ps = MainProcess.checkInput(length - 2, length - 2, 0, MAX_POINT);
             //存入数组，判断是否越界
             ArrayList<Integer> points = new ArrayList<Integer>(length);
@@ -69,7 +69,7 @@ public class Player {
             }
             if (total - psTotal < 0) {
                 i--;
-                System.out.println("点数不足");
+                System.out.println("Pas assez de points restants!");
                 continue;
             } else {
                 total -= psTotal;
@@ -90,7 +90,7 @@ public class Player {
     }
 
     public void setReservists() {
-        System.out.println("请选择预备役");
+        System.out.println("Veuillez sélectionner votre RESERVIST");
         //打印学生
         for (int i = 0; i < this.students.size(); i++) {
             System.out.println((i + 1) + " : " + this.students.get(i).toString());
@@ -126,18 +126,18 @@ public class Player {
     }
 
     public void assignStudentsToZone(Zone zone) {
-        System.out.println("请输入分配在" + zone.getZoneName().getName() + "学生");
+        System.out.println("Veuillez entrer les étudiants affectés à " + zone.getZoneName().getName() );
         assignStudents(zone, this.students, this.students.size());
     }
 
     public void assignReservistsToZone(Zone zone) {
-        System.out.println("请输入分配在" + zone.getZoneName().getName() + "预备役学生");
-        assignStudents(zone, this.reservists, this.students.size());
+        System.out.println("Veuillez entrer les reservists affectés à " + zone.getZoneName().getName() );
+        assignStudents(zone, this.reservists, this.reservists.size());
     }
 
     public void assignGarrisonToZone(Zone zone) {
-        System.out.println("请输入分配在" + zone.getZoneName().getName() + "的驻守学生");
-        assignStudents(zone, this.reservists, 1);
+        System.out.println("Veuillez entrer les étudiants qui restent sur la zone contrôlée affectés à " + zone.getZoneName().getName() );
+        assignStudents(zone, this.students, 1);
     }
 
     public void addStudents(Student student) {

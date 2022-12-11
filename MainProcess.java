@@ -3,8 +3,6 @@ package game;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static java.lang.System.exit;
-
 public class MainProcess {
     private Player[] players = new Player[Gamers.values().length];
     private Zone[] zones = new Zone[ZoneName.values().length];
@@ -30,12 +28,12 @@ public class MainProcess {
                 continue;
             }
             if (userInput.length < lengthMin || userInput.length > lengthMax) {
-                System.out.println("输入长度错误");
+                System.out.println("Erreur de longueur du contenu d'entrée! Veuillez ressaisir les données.");
                 isInputWrong = true;
                 continue;
             }
             if (hasDuplicateElement(userInput)) {
-                System.out.println("有重复元素");
+                System.out.println("Vous avez entré un élément en double! Veuillez ressaisir les données.");
                 isInputWrong = true;
                 continue;
             }
@@ -43,7 +41,7 @@ public class MainProcess {
                 int tmp = Integer.parseInt(s);
                 if (tmp < min || tmp > max) {
                     isInputWrong = true;
-                    System.out.println("输入越界");
+                    System.out.println("L'élément que vous avez entré est hors limites! Veuillez ressaisir les données.");
                     break;
                 }
             }
@@ -67,7 +65,7 @@ public class MainProcess {
                 str.append(p.name() + "(" + p.ordinal() + ") ");
             }
             System.out.println(str.toString());
-            System.out.println("请输入你要选择的队伍 : ");
+            System.out.println("Veuillez entrer la filière que vous souhaitez choisir: ");
             int[] p = checkInput(1, 1, 0, Programme.values().length - 1);
             players[i] = new Player(Gamers.values()[i], Programme.values()[p[0]]);
             players[i].setReservists();
@@ -75,36 +73,50 @@ public class MainProcess {
 
     }
 
-    public void game(){
+    public void game() {
         boolean gameOver = false;
         int cnt = 1;
-        while(gameOver){
-            System.out.println("第"+cnt+"回合开始");
+        while (!gameOver) {
+            System.out.println("Tour " + cnt + " commence");
             //安排每个地点的人员
             for (Zone z : this.zones) {
                 if (!z.isOccupied()) {
                     for (Player p : this.players) {
+                        System.out.println(p.getGamer().name() + ":");
                         if (p.hasStudents())
                             p.assignStudentsToZone(z);
-                        if (p.hasReservists() && cnt!=1 )
+                        if (p.hasReservists() && cnt != 1)
                             p.assignReservistsToZone(z);
                     }
+                    System.out.println(z);
                 }
             }
             //战斗
             boolean isDone = false;
+            System.out.println("La bataille commence...");
             while (!isDone) {
                 for (Zone z : this.zones) {
-                    if(!z.isOccupied()){
+                    if (!z.isOccupied()) {
                         z.fight();
-                        isDone = z.isDone();
+                        if (z.isDone()) {
+                            isDone = true;
+                            z.setOwner();
+                        }
                     }
                 }
             }
+
+            // 打印当前场地信息
+            for(Zone z: this.zones){
+                System.out.println("Informations sur le joueur actuel et le lieu: ");
+                System.out.println(z);
+            }
+
             // 回收胜利地区的人员
+            System.out.println("Récupérez l'étudiant de la zone de victoire...");
             for (Zone z : this.zones) {
-                if (z.isDone()) {
-                    Gamers g = z.whoWin();
+                if (z.isDone() && !z.isOccupied()) {
+                    Gamers g = z.getOwner();
                     this.players[g.ordinal()].addZoneNames(z.getZoneName());
                     ArrayList<Student> students = z.getStudents(g);
                     for (Student s : students) {
@@ -113,27 +125,44 @@ public class MainProcess {
                     z.getStudents(g).clear();
                 }
             }
-            // 设置驻留人员
+
+            // 打印玩家信息
+            for(Player p :this.players){
+                System.out.println(p);
+            }
             for (Zone z : this.zones) {
-                if (z.isDone() || !z.isOccupied()) {
-                    Gamers g = z.whoWin();
-                    this.players[g.ordinal()].assignStudentsToZone(z);
-                    z.setOccupied();
+                if (z.isDone() && !z.isOccupied()) {
+                    Gamers g = z.getOwner();
+                    System.out.println("Joueur " + g.name() + " a obtenu " + z.getZoneName().name());
                 }
             }
             //检测胜利
-            for (Player p : this.players){
-                if (p.isWin()){
-                    System.out.println(p.getGamer().name() + "胜利！");
+            for (Player p : this.players) {
+                if (p.isWin()) {
+                    System.out.println("Joueur " + p.getGamer().name() + " gagne!");
                     gameOver = true;
+                    break;
                 }
             }
+            if(gameOver){
+                continue;
+            }
 
+            // 设置驻留人员
+            for (Zone z : this.zones) {
+                if (z.isDone() && !z.isOccupied()) {
+                    Gamers g = z.getOwner();
+                    Player p = this.players[g.ordinal()];
+                    System.out.println(p);
+                    p.assignGarrisonToZone(z);
+                    z.setOccupied();
+                }
+            }
             cnt++;
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         MainProcess m = new MainProcess();
         m.game();
     }
