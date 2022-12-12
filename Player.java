@@ -52,12 +52,12 @@ public class Player {
                 c = Category.MAITRE_GOBI;
             System.out.println(createPrompt(c));
             //确定学生的策略
-            System.out.println("Veuillez entrer la stratégie de l'étudiant " + (i + 1) );
-            int s = MainProcess.checkInput(1, 1, 0, Strategy.values().length - 1)[0];
+            System.out.println("Veuillez entrer la stratégie de l'étudiant " + (i + 1));
+            int s = MainProcess.checkInput(1, 1, 0, Strategy.values().length - 1, false)[0];
             //确定学生的点数
             System.out.println("Veuillez attribuer des points à l'étudiant " + (i + 1) + "(cinq types)");
             System.out.println("Les points restants: " + total);
-            int[] ps = MainProcess.checkInput(length - 2, length - 2, 0, MAX_POINT);
+            int[] ps = MainProcess.checkInput(length - 2, length - 2, 0, MAX_POINT, false);
             //存入数组，判断是否越界
             ArrayList<Integer> points = new ArrayList<Integer>(length);
             points.add(c.ordinal());
@@ -95,7 +95,7 @@ public class Player {
         for (int i = 0; i < this.students.size(); i++) {
             System.out.println((i + 1) + " : " + this.students.get(i).toString());
         }
-        int[] ordinals = MainProcess.checkInput(NUM_OF_RES, NUM_OF_RES, 1, NUM_OF_STU);
+        int[] ordinals = MainProcess.checkInput(NUM_OF_RES, NUM_OF_RES, 1, NUM_OF_STU, false);
         for (int i = 0; i < ordinals.length; i++) {
             Student s = this.students.remove(ordinals[i] - 1 - i);
             s.setReservist();
@@ -111,33 +111,34 @@ public class Player {
         return this.zoneNames.size() >= VICTORY_CONDITIONS ? true : false;
     }
 
-    private void assignStudents(Zone zone, ArrayList<Student> students, int lengthMax) {
+    private void assignStudents(Zone zone, ArrayList<Student> students, int lengthMax, boolean isEmpty) {
         //打印学生
         for (int i = 0; i < students.size(); i++) {
             System.out.println((i + 1) + " : " + students.get(i).toString());
         }
         //确认分配的学生
-        int[] ordinals = MainProcess.checkInput(1, lengthMax, 1, students.size());
+        int[] ordinals = MainProcess.checkInput(1, lengthMax, 1, students.size(), isEmpty);
         //转移学生
-        for (int i = 0; i < ordinals.length; i++) {
-            Student s = students.remove(ordinals[i] - 1 - i);
-            zone.addStudent(s, this.gamer);
-        }
+        if (ordinals != null)
+            for (int i = 0; i < ordinals.length; i++) {
+                Student s = students.remove(ordinals[i] - 1 - i);
+                zone.addStudent(s, this.gamer);
+            }
     }
 
-    public void assignStudentsToZone(Zone zone) {
-        System.out.println("Veuillez entrer les étudiants affectés à " + zone.getZoneName().getName() );
-        assignStudents(zone, this.students, this.students.size());
+    public void assignStudentsToZone(Zone zone, boolean isEmpty) {
+        System.out.println("Veuillez entrer les étudiants affectés à " + zone.getZoneName().getName());
+        assignStudents(zone, this.students, this.students.size(), isEmpty);
     }
 
-    public void assignReservistsToZone(Zone zone) {
-        System.out.println("Veuillez entrer les reservists affectés à " + zone.getZoneName().getName() );
-        assignStudents(zone, this.reservists, this.reservists.size());
+    public void assignReservistsToZone(Zone zone, boolean isEmpty) {
+        System.out.println("Veuillez entrer les reservists affectés à " + zone.getZoneName().getName());
+        assignStudents(zone, this.reservists, this.reservists.size(), isEmpty);
     }
 
     public void assignGarrisonToZone(Zone zone) {
-        System.out.println("Veuillez entrer les étudiants qui restent sur la zone contrôlée affectés à " + zone.getZoneName().getName() );
-        assignStudents(zone, this.students, 1);
+        System.out.println("Veuillez entrer les étudiants qui restent sur la zone contrôlée affectés à " + zone.getZoneName().getName());
+        assignStudents(zone, this.students, 1, false);
     }
 
     public void addStudents(Student student) {

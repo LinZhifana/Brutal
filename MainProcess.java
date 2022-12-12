@@ -15,7 +15,7 @@ public class MainProcess {
         return false;
     }
 
-    static int[] checkInput(int lengthMin, int lengthMax, int min, int max) {
+    static int[] checkInput(int lengthMin, int lengthMax, int min, int max, boolean isEmpty) {
         boolean isInputWrong;
         Scanner scanner = new Scanner(System.in);
         String[] userInput;
@@ -23,6 +23,11 @@ public class MainProcess {
             String in = scanner.nextLine();
             userInput = in.split(" |,");
             isInputWrong = false;
+
+            if (isEmpty && userInput.length == 1 && Integer.parseInt(userInput[0]) == -1) {
+                return null;
+            }
+
             if (in.trim().isEmpty()) {
                 isInputWrong = true;
                 continue;
@@ -66,7 +71,7 @@ public class MainProcess {
             }
             System.out.println(str.toString());
             System.out.println("Veuillez entrer la filière que vous souhaitez choisir: ");
-            int[] p = checkInput(1, 1, 0, Programme.values().length - 1);
+            int[] p = checkInput(1, 1, 0, Programme.values().length - 1, false);
             players[i] = new Player(Gamers.values()[i], Programme.values()[p[0]]);
             players[i].setReservists();
         }
@@ -83,10 +88,17 @@ public class MainProcess {
                 if (!z.isOccupied()) {
                     for (Player p : this.players) {
                         System.out.println(p.getGamer().name() + ":");
-                        if (p.hasStudents())
-                            p.assignStudentsToZone(z);
-                        if (p.hasReservists() && cnt != 1)
-                            p.assignReservistsToZone(z);
+                        if (p.hasReservists() && cnt != 1) {
+                            System.out.println("Entrez -1 pour indiquer que personne n'est choisie");
+                            p.assignReservistsToZone(z, true);
+                        }
+                        if (p.hasStudents() && cnt == 1)
+                            p.assignStudentsToZone(z, false);
+                        else {
+                            System.out.println("Entrez -1 pour indiquer que personne n'est choisie");
+                            p.assignStudentsToZone(z, true);
+
+                        }
                     }
                     System.out.println(z);
                 }
@@ -107,7 +119,7 @@ public class MainProcess {
             }
 
             // 打印当前场地信息
-            for(Zone z: this.zones){
+            for (Zone z : this.zones) {
                 System.out.println("Informations sur le joueur actuel et le lieu: ");
                 System.out.println(z);
             }
@@ -127,7 +139,7 @@ public class MainProcess {
             }
 
             // 打印玩家信息
-            for(Player p :this.players){
+            for (Player p : this.players) {
                 System.out.println(p);
             }
             for (Zone z : this.zones) {
@@ -144,7 +156,7 @@ public class MainProcess {
                     break;
                 }
             }
-            if(gameOver){
+            if (gameOver) {
                 continue;
             }
 
