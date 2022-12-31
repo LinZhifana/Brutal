@@ -1,5 +1,10 @@
 package game;
 
+import vue.UserInterface;
+
+import java.awt.*;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -58,31 +63,29 @@ public class MainProcess {
         return ret;
     }
 
-    public MainProcess() {
-        //初始化场地
-        for (int i = 0; i < ZoneName.values().length; i++) {
-            zones[i] = new Zone(ZoneName.values()[i]);
-        }
-        //初始化玩家，分配学生，分配预备队员
-        for (int i = 0; i < Gamers.values().length; i++) {
-            StringBuffer str = new StringBuffer("Programme : \n");
-            for (Programme p : Programme.values()) {
-                str.append(p.name() + "(" + p.ordinal() + ") ");
-            }
-            System.out.println(str.toString());
-            System.out.println("Veuillez entrer la filière que vous souhaitez choisir: ");
-            int[] p = checkInput(1, 1, 0, Programme.values().length - 1, false);
-            players[i] = new Player(Gamers.values()[i], Programme.values()[p[0]]);
-            players[i].setReservists();
-        }
-
+    public Player[] getPlayers() {
+        return players;
     }
 
-    public void game() {
+    public void setPlayers(Player[] players) {
+        this.players = players;
+    }
+
+    public Zone[] getZones() {
+        return zones;
+    }
+
+    public void setZones(Zone[] zones) {
+        this.zones = zones;
+    }
+
+    public synchronized void game() {
         boolean gameOver = false;
         int cnt = 1;
         while (!gameOver) {
-            System.out.println("Tour " + cnt + " commence");
+            System.out.println("========================================");
+            System.out.println("            Tour " + cnt + " commence           ");
+            System.out.println("========================================");
             //安排每个地点的人员
             for (Zone z : this.zones) {
                 if (!z.isOccupied()) {
@@ -90,14 +93,13 @@ public class MainProcess {
                         System.out.println(p.getGamer().name() + ":");
                         if (p.hasReservists() && cnt != 1) {
                             System.out.println("Entrez -1 pour indiquer que personne n'est choisie");
-                            p.assignReservistsToZone(z, true);
+                            p.assignReservistsToZone(z,true);
                         }
                         if (p.hasStudents() && cnt == 1)
-                            p.assignStudentsToZone(z, false);
+                            p.assignStudentsToZone(z);
                         else {
                             System.out.println("Entrez -1 pour indiquer que personne n'est choisie");
-                            p.assignStudentsToZone(z, true);
-
+                            p.assignStudentsToZone(z,true);
                         }
                     }
                     System.out.println(z);
@@ -120,12 +122,15 @@ public class MainProcess {
 
             // 打印当前场地信息
             for (Zone z : this.zones) {
+                System.out.println("||||||||||||||||||||||||||");
+                System.out.println("||||||||||||||||||||||||||");
                 System.out.println("Informations sur le joueur actuel et le lieu: ");
                 System.out.println(z);
             }
 
             // 回收胜利地区的人员
-            System.out.println("Récupérez l'étudiant de la zone de victoire...");
+            System.out.println("++++++++++++++++++++++++++");
+            System.out.println("++++++++++++++++++++++++++");
             for (Zone z : this.zones) {
                 if (z.isDone() && !z.isOccupied()) {
                     Gamers g = z.getOwner();
@@ -137,6 +142,9 @@ public class MainProcess {
                     z.getStudents(g).clear();
                 }
             }
+            System.out.println("Récupérez l'étudiant de la zone de victoire...");
+            System.out.println("++++++++++++++++++++++++++");
+            System.out.println("++++++++++++++++++++++++++");
 
             // 打印玩家信息
             for (Player p : this.players) {
@@ -148,6 +156,8 @@ public class MainProcess {
                     System.out.println("Joueur " + g.name() + " a obtenu " + z.getZoneName().name());
                 }
             }
+            System.out.println("++++++++++++++++++++++++++");
+            System.out.println("++++++++++++++++++++++++++");
             //检测胜利
             for (Player p : this.players) {
                 if (p.isWin()) {
@@ -167,15 +177,95 @@ public class MainProcess {
                     Player p = this.players[g.ordinal()];
                     System.out.println(p);
                     p.assignGarrisonToZone(z);
-                    z.setOccupied();
+
+                    z.setOccupied(true);
                 }
             }
             cnt++;
         }
     }
 
-    public static void main(String[] args) {
-        MainProcess m = new MainProcess();
-        m.game();
+    public static void main(String[] args){
+        Zone[] zones = new Zone[5];
+        for (int i = 0; i < ZoneName.values().length; i++) {
+            zones[i] = new Zone(ZoneName.values()[i]);
+            System.out.println(zones[i]);
+        }
+        ArrayList<Student> students = new ArrayList<>();
+        for(int i=0; i<15;i++){
+            Student student = new Student(new String("++"+i));
+            student.setCategory(Category.ETUDIANT_ELITE);
+            student.setReservist(false);
+            student.setStrategy(Strategy.OFFENSIVE);
+            student.setConstitution(5);
+            student.setDexterite(4);
+            student.setForce(10);
+            student.setInitiative(2);
+            students.add(student);
+        }
+        int k = 0;
+        for(int i = 0;i<15;i+=3){
+            students.get(i).setZoneName(ZoneName.values()[k]);
+            students.get(i+1).setZoneName(ZoneName.values()[k]);
+            students.get(i+2).setZoneName(ZoneName.values()[k++]);
+        }
+        ArrayList<Student> res = new ArrayList<>();
+        for(int i=0; i<5;i++){
+            Student student = new Student(new String("++"+i));
+            student.setCategory(Category.ETUDIANT_ELITE);
+            student.setReservist(true);
+            student.setStrategy(Strategy.OFFENSIVE);
+            student.setConstitution(5);
+            student.setDexterite(4);
+            student.setForce(10);
+            student.setInitiative(2);
+            res.add(student);
+        }
+
+        ArrayList<Student> studentsB = new ArrayList<>();
+        for(int i=0; i<15;i++){
+            Student student = new Student(new String("++"+i));
+            student.setCategory(Category.ETUDIANT_ELITE);
+            student.setReservist(false);
+            student.setStrategy(Strategy.OFFENSIVE);
+            student.setConstitution(5);
+            student.setDexterite(4);
+            student.setForce(10);
+            student.setInitiative(2);
+            studentsB.add(student);
+        }
+        k = 0;
+        for(int i = 0;i<15;i+=3){
+            studentsB.get(i).setZoneName(ZoneName.values()[k]);
+            studentsB.get(i+1).setZoneName(ZoneName.values()[k]);
+            studentsB.get(i+2).setZoneName(ZoneName.values()[k++]);
+        }
+        ArrayList<Student> resB = new ArrayList<>();
+        for(int i=0; i<5;i++){
+            Student student = new Student(new String("++"+i));
+            student.setCategory(Category.ETUDIANT_ELITE);
+            student.setReservist(true);
+            student.setStrategy(Strategy.OFFENSIVE);
+            student.setConstitution(5);
+            student.setDexterite(4);
+            student.setForce(10);
+            student.setInitiative(2);
+            resB.add(student);
+        }
+
+        Player playerA= new Player(Gamers.A);
+        playerA.setReservists(res);
+        playerA.setStudents(students);
+
+        Player playerB = new Player(Gamers.B);
+        playerB.setReservists(resB);
+        playerB.setStudents(studentsB);
+
+        MainProcess mainProcess = new MainProcess();
+        mainProcess.setZones(zones);
+        mainProcess.setPlayers(new Player[]{playerA,playerB});
+        mainProcess.game();
     }
+
 }
+

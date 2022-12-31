@@ -1,11 +1,14 @@
 package game;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 public class Zone {
     private ZoneName zoneName;
-    private boolean isOccupied = false;
     private Gamers owner;
+    private boolean isOccupied = false;
     private ArrayList<Student>[] students = new ArrayList[Gamers.values().length];
 
     public Zone(ZoneName zoneName) {
@@ -153,8 +156,8 @@ public class Zone {
         return this.owner;
     }
 
-    public void setOccupied() {
-        isOccupied = true;
+    public void setOccupied(boolean isOccupied) {
+        this.isOccupied = isOccupied;
     }
 
     public boolean isOccupied() {
@@ -172,39 +175,5 @@ public class Zone {
         return str.toString();
     }
 
-    public static void main(String[] args) {
-        Zone z1 = new Zone(ZoneName.HI);
-        ArrayList<Integer> p1 = new ArrayList<>(Arrays.asList(0, 1, 5, 5, 5, 5, 5));
-        ArrayList<Integer> p2 = new ArrayList<>(Arrays.asList(0, 0, 4, 4, 4, 4, 4));
-        ArrayList<Integer> p3 = new ArrayList<>(Arrays.asList(0, 1, 6, 6, 6, 6, 6));
-        ArrayList<Integer> p4 = new ArrayList<>(Arrays.asList(0, 1, 3, 3, 3, 3, 3));
 
-        Student a1 = new Student(p1);
-        Student a2 = new Student(p2);
-        Student a3 = new Student(p3);
-        Student a4 = new Student(p4);
-        Student a5 = new Student(p2);
-        Student b2 = new Student(p2);
-        Student b1 = new Student(p3);
-        Student b3 = new Student(p4);
-        Student b4 = new Student(p1);
-        Student b5 = new Student(p3);
-
-        z1.addStudent(a1, Gamers.A);
-        z1.addStudent(a2, Gamers.A);
-        z1.addStudent(a3, Gamers.A);
-        //z.addStudent(a4, Gamers.A);
-        //z.addStudent(a5, Gamers.A);
-        z1.addStudent(b1, Gamers.B);
-        z1.addStudent(b2, Gamers.B);
-        z1.addStudent(b3, Gamers.B);
-        z1.addStudent(b4, Gamers.B);
-        //z.addStudent(b5, Gamers.A);
-        boolean isDone = false;
-        while (isDone) {
-            z1.fight();
-            System.out.println(z1);
-            isDone = z1.isDone();
-        }
-    }
 }
