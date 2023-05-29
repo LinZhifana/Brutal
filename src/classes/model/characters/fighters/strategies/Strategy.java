@@ -10,11 +10,11 @@ public interface Strategy {
     /**
      * Make a fighter fight another one.
      *
-     * @see Student
+     * @see SStudent
      * @param f1 fighter 1
      * @param f2 fighter 2
      */
-    void fight(Student f1, Student f2);
+    int fight(Student f1, Student f2);
 
     /**
      * Get strategy.

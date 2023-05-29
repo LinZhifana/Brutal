@@ -23,9 +23,9 @@ public class Random implements Strategy {
      * @param f1 fighter 1
      * @param f2 fighter 2
      */
-    public void fight(Student f1, Student f2) {
+    public int fight(Student f1, Student f2) {
         this.setStrategy();
-        this.strategy.fight(f1, f2);
+        return this.strategy.fight(f1, f2);
     }
 
     /**

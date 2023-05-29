@@ -1,7 +1,7 @@
 package classes.model.battlefields;
 
 import classes.model.characters.fighters.students.Student;
-import classes.model.characters.players.Team;
+import classes.model.characters.players.Player.Team;
 
 import java.util.ArrayList;
 

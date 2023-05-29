@@ -48,6 +48,7 @@ public class TurnBased implements FightingStyle {
      * @param team1 The team engaging the fight
      * @param team2 The team under attack
      */
+    // 这里打架
     private void teamFight(ArrayList<Student> team1, ArrayList<Student> team2) {
         for (Student f: team1) {
             if (team2.isEmpty()) {
@@ -80,6 +81,7 @@ public class TurnBased implements FightingStyle {
      *
      * @param team a team of Student
      */
+    // 删除死人
     public void killFighter(ArrayList<Student> team) {
         ArrayList<Student> temp = new ArrayList<>();
         team.forEach(f -> {
