@@ -30,6 +30,17 @@ public class FightMessages {
 		size = actors.size();
 	}
 	
+	public void addMessageSet(FightMessages otherFightMessages) {
+	    for (int i = 0; i < otherFightMessages.size; i++) {
+	        actors.add(otherFightMessages.actors.get(i));
+	        recipients.add(otherFightMessages.recipients.get(i));
+	        actorCharacters.add(otherFightMessages.actorCharacters.get(i));
+	        recipientCharacters.add(otherFightMessages.recipientCharacters.get(i));
+	        strategies.add(otherFightMessages.strategies.get(i));
+	    }
+	    size = actors.size();
+	}
+	
 	public int getActorIndex() {
 		return actors.get(currentIndex) % 100;
 	}
