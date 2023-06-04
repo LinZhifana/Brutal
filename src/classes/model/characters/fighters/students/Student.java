@@ -1,7 +1,10 @@
 package classes.model.characters.fighters.students;
 
+import classes.model.animation.Animation;
+import classes.model.animation.Animation.Action;
 import classes.model.characters.fighters.strategies.Attack;
 import classes.model.characters.fighters.strategies.Strategy;
+import classes.model.characters.fighters.students.Student.Character;
 
 public class Student implements Fighter{
 	protected String firstname;
@@ -14,6 +17,12 @@ public class Student implements Fighter{
 	protected int initiative;
 	protected Strategy strategy;
 	protected Character character;
+	
+    protected Animation attackAnimation;
+    protected Animation healAnimation;
+    protected Animation walkAnimation;
+    protected Animation hurtAnimation;
+    protected Animation dyingAnimation;
 
 	public enum Character {
 		Student, Elite, Gobi
@@ -64,6 +73,13 @@ public class Student implements Fighter{
 		default:
 			break;
 		}
+		// 最后删掉
+        student.attackAnimation = Animation.createAnimation(character, Action.Attacking);
+        student.healAnimation = Animation.createAnimation(character, Action.Taunt);
+        student.walkAnimation = Animation.createAnimation(character, Action.Walking);
+        student.hurtAnimation = Animation.createAnimation(character, Action.Hurt);
+        student.dyingAnimation = Animation.createAnimation(character, Action.Dying);
+		
 		return student;
 	}
 	
@@ -215,6 +231,28 @@ public class Student implements Fighter{
 
 	public String getLastName() {
 		return lastName;
+	}
+	
+	
+
+	public Animation getAttackAnimation() {
+		return attackAnimation;
+	}
+
+	public Animation getHealAnimation() {
+		return healAnimation;
+	}
+
+	public Animation getWalkAnimation() {
+		return walkAnimation;
+	}
+
+	public Animation getHurtAnimation() {
+		return hurtAnimation;
+	}
+
+	public Animation getDyingAnimation() {
+		return dyingAnimation;
 	}
 
 	@Override

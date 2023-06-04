@@ -59,7 +59,7 @@ public class Game {
 	 */
 	private void initDefaultPlayers() {
 		this.p1 = new Player("Player 1", this.generateTeam(), Branch.ISI, Team.TEAM1);
-		this.p2 = new Player("Player 2", this.generateTeam(), Branch.ISI, Team.TEAM2);
+		this.p2 = new Player("Player 2", this.generateTeam(), Branch.GI, Team.TEAM2);
 	}
 
 	/**
@@ -165,6 +165,8 @@ public class Game {
 		activeDistricts = temp.toArray(activeDistricts);
 		return activeDistricts;
 	}
+	
+	
 
 	public District[] getDistricts() {
 		return districts;

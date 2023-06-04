@@ -3,8 +3,8 @@ package classes.model.animation;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import classes.controller.ControllerVueCore;
 import classes.model.characters.players.Player.Branch;
+import classes.controller.GameUtil;
 import classes.model.characters.fighters.students.Student.Character;
 
 import java.io.File;
@@ -22,20 +22,20 @@ public class Animation {
 	private final static HashMap<Branch, String> teamPaths = new HashMap<Branch, String>() {
 		{
 			// folderPath 开头不加/
-			put(Branch.GI, "src/resources/images/animation/Pirate/");
-			put(Branch.RT, "src/resources/images/animation/Thief/");
-			put(Branch.A2I, "src/resources/images/animation/Barbarian/");
-			put(Branch.GM, "src/resources/images/animation/RedHat/");
-			put(Branch.ISI, "src/resources/images/animation/Devil/");
-			put(Branch.MTE, "src/resources/images/animation/Wizard/");
+			put(Branch.GI, "src/resources/animations/Pirate/");
+			put(Branch.RT, "src/resources/animations/Thief/");
+			put(Branch.A2I, "src/resources/animations/Barbarian/");
+			put(Branch.GM, "src/resources/animations/RedHat/");
+			put(Branch.ISI, "src/resources/animations/Devil/");
+			put(Branch.MTE, "src/resources/animations/Wizard/");
 		}
 	};
 
 	public final static HashMap<Character, String> characterPaths = new HashMap<Character, String>() {
 		{
-			put(Character.Student, "src/resources/images/animation/cStudent/");
-			put(Character.Elite, "src/resources/images/animation/cElite/");
-			put(Character.Gobi, "src/resources/images/animation/cGobi/");
+			put(Character.Student, "src/resources/animations/cStudent/");
+			put(Character.Elite, "src/resources/animations/cElite/");
+			put(Character.Gobi, "src/resources/animations/cGobi/");
 		}
 	};
 
@@ -124,7 +124,7 @@ public class Animation {
 		ImageIcon imageIcon = new ImageIcon(img);
 
 		if (direction == Direction.Left) {
-			imageIcon = ControllerVueCore.flipImageHorizontally(imageIcon);
+			imageIcon = GameUtil.flipImageHorizontally(imageIcon);
 		}
 
 		// 设置Label的图标为绘制的图片
@@ -142,7 +142,7 @@ public class Animation {
 		ImageIcon imageIcon = new ImageIcon(img);
 
 		if (direction == Direction.Left) {
-			imageIcon = ControllerVueCore.flipImageHorizontally(imageIcon);
+			imageIcon = GameUtil.flipImageHorizontally(imageIcon);
 		}
 
 		// 设置Label的图标为绘制的图片
