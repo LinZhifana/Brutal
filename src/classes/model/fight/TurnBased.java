@@ -101,11 +101,11 @@ public class TurnBased implements FightingStyle {
 				aIndex = yourTeam.indexOf(actor) + 200;
 				rIndex = yourTeam.indexOf(recipient) + 200;
 			}
-			fightMessages.addFightMessages(aIndex, rIndex, actor.getCharacter(), recipient.getCharacter(), strategy);
+			fightMessages.addFightMessages(aIndex, rIndex, actor.getCharacter(), recipient.getCharacter(), strategy, false);
 		} else {
 			Student recipient = this.getFighterWithMinCredit(enemyTeam);
 			actor.fight(recipient);
-			this.killFighter(enemyTeam);
+			Boolean isDead = this.killFighter(enemyTeam);
 			
 			if(team == Team.TEAM1) {
 				aIndex = yourTeam.indexOf(actor) + 100;
@@ -114,7 +114,7 @@ public class TurnBased implements FightingStyle {
 				aIndex = yourTeam.indexOf(actor) + 200;
 				rIndex = enemyTeam.indexOf(recipient) + 100;
 			}
-			fightMessages.addFightMessages(aIndex, rIndex, actor.getCharacter(), recipient.getCharacter(), strategy);
+			fightMessages.addFightMessages(aIndex, rIndex, actor.getCharacter(), recipient.getCharacter(), strategy, isDead);
 		}
 	}
 

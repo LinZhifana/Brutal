@@ -14,19 +14,21 @@ public class FightMessages {
     private List<Character> actorCharacters = new ArrayList<>();
     private List<Character> recipientCharacters = new ArrayList<>();
     private List<Strategy> strategies = new ArrayList<>();
+    private List<Boolean> isDeads = new ArrayList<>();
     private int currentIndex = 0;
     private int size = 0;
 
 	// team1 100-199
 	// team2 200-299
 	public void addFightMessages(int actor, int recipient, Character actorCharacter,
-			Character recipientCharacter, Strategy strategy) {
+			Character recipientCharacter, Strategy strategy, boolean isDead) {
 		// 将参数添加到列表
 		actors.add(actor);
 		recipients.add(recipient);
 		actorCharacters.add(actorCharacter);
 		recipientCharacters.add(recipientCharacter);
 		strategies.add(strategy);
+		isDeads.add(isDead);
 		size = actors.size();
 	}
 	
@@ -59,6 +61,10 @@ public class FightMessages {
 
 	public Strategy getStrategie() {
 		return strategies.get(currentIndex);
+	}
+	
+	public Boolean isDead() {
+		return isDeads.get(currentIndex);
 	}
 
 	public int getCurrentIndex() {

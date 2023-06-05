@@ -11,11 +11,16 @@ import classes.model.characters.players.Player.Branch;
 import classes.model.characters.players.Player.Team;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GameFrame extends JFrame{
 
+	private ArrayList<District> districts;
+	
 	public GameFrame(ArrayList<District> districts) {
+		this.districts = districts;
 		this.setTitle("War Game");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);// 固定窗体
@@ -34,16 +39,39 @@ public class GameFrame extends JFrame{
 
 	private void init(ArrayList<District> districts) {
 		CombatPanel combatPanel = new CombatPanel(districts,Branch.ISI, Branch.GM);
-		//ScoreboardPanel scoreboardPanel = new ScoreboardPanel(Branch.ISI, Branch.GM);
-		//this.add(scoreboardPanel);
+		
 		this.add(combatPanel);
 		this.setVisible(true);		
 		
+		
+		
+		JButton skipButton = new JButton("skip");
+		skipButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				// 连接新窗口
+				ScoreboardFrame scoreboardFrame = new ScoreboardFrame();
+			}
+		});
+		skipButton.setFont(new Font("Bauhaus 93", Font.ITALIC, 40));
+		skipButton.setBounds(Config.FRAME_WIDTH/2 - 455/2, Config.FRAME_HEIGHT - 100, 450, 55);
+		skipButton.setContentAreaFilled(false);
+		skipButton.setBorderPainted(false);
+		skipButton.setVisible(true);
+		
+		JLabel zoneBg = new JLabel();
+		zoneBg.setIcon(new ImageIcon(GameUtil.createImage(Config.IMAGE_RESOURCES_PATH +"background/tagBg.png", 450, 55)));
+		zoneBg.setBounds(Config.FRAME_WIDTH/2 - 450/2, Config.FRAME_HEIGHT - 100, 450, 55);
+		zoneBg.setOpaque(false);
+		zoneBg.setVisible(true);
+		
+		combatPanel.add(skipButton);
+		combatPanel.add(zoneBg);
 		GameUtil.task(5, ()->{
-			combatPanel.repaint();
-			//scoreboardPanel.repaint();
+			combatPanel.repaint();			
 		});
 	}
+
 
 	public static void main(String[] args) {
 		String[] districtNames = { "Library", "Student office", "Administrative district", "Industrial halls",
@@ -62,7 +90,7 @@ public class GameFrame extends JFrame{
 			{
 				add(Student.createStudent(Character.Student,"3","001"));
 				add(Student.createStudent(Character.Student,"3","002"));
-				add(Student.createStudent(Character.Gobi,"3","003"));
+				add(Student.createStudent(Character.Student,"3","003"));
 				add(Student.createStudent(Character.Elite,"2","004"));
 				add(Student.createStudent(Character.Gobi,"1","005"));
 
@@ -72,7 +100,7 @@ public class GameFrame extends JFrame{
 			{
 				add(Student.createStudent(Character.Student,"3","201"));
 				add(Student.createStudent(Character.Student,"3","202"));
-				add(Student.createStudent(Character.Student,"3","203"));
+				add(Student.createStudent(Character.Elite,"3","203"));
 				add(Student.createStudent(Character.Elite,"2","204"));
 				add(Student.createStudent(Character.Gobi,"1","205"));
 
@@ -100,12 +128,35 @@ public class GameFrame extends JFrame{
 			}
 		};
 		
+		ArrayList<Student> students5 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Elite,"2","004"));
+				add(Student.createStudent(Character.Gobi,"1","005"));
+
+			}
+		};
+		ArrayList<Student> students6 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Elite,"2","204"));
+				add(Student.createStudent(Character.Gobi,"1","205"));
+
+			}
+		};
+		
 		students1.forEach(s->districts.get(0).addFighterTeam(s, Team.TEAM1));
 		students2.forEach(s->districts.get(0).addFighterTeam(s, Team.TEAM2));
 		
 		students3.forEach(s->districts.get(1).addFighterTeam(s, Team.TEAM1));
 		students4.forEach(s->districts.get(1).addFighterTeam(s, Team.TEAM2));
 		
+		students5.forEach(s->districts.get(2).addFighterTeam(s, Team.TEAM1));
+		students6.forEach(s->districts.get(2).addFighterTeam(s, Team.TEAM2));
+		
+		students5.forEach(s->districts.get(3).addFighterTeam(s, Team.TEAM1));
+		students6.forEach(s->districts.get(3).addFighterTeam(s, Team.TEAM2));
+		
+		students5.forEach(s->districts.get(4).addFighterTeam(s, Team.TEAM1));
+		students6.forEach(s->districts.get(4).addFighterTeam(s, Team.TEAM2));
 		
 		new GameFrame(districts);
 	}

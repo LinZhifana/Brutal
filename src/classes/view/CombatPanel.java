@@ -1,6 +1,8 @@
 package classes.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -52,13 +54,13 @@ public class CombatPanel extends JPanel {
 	
 	// 士兵动作消息
 	private FightMessages fightMessages; 
-	
+	private ArrayList<FightMessages> fightMessagesSet;
 	// 背景
 	private Image backgroundImage;
 	private int index = 0;
 	
 	// 导航栏尺寸
-	private final static int NAV_LABEL_WIDTH = 150;
+	private final static int NAV_LABEL_WIDTH = 450;
 	private final static int NAV_HEIGHT = 55;
 	private final static int NAV_PADDING_TOP = Config.FRAME_WIDTH / 20;
 	private final static int NAV_COLOR = 0xEDC6B1;
@@ -76,8 +78,7 @@ public class CombatPanel extends JPanel {
 	
 	// 延时
 	private final static int DELAY_TIME = 100;
-	
-	
+
 	// 初始动画
 	private HashMap<Character, HashMap<Action, Animation>> animations = new HashMap<Character, HashMap<Action, Animation>>() {
 		{
@@ -120,20 +121,30 @@ public class CombatPanel extends JPanel {
 		setLayout(null);
 		
 		backgroundImage = createBackgroundImage(DistrictName.Library);
+		
+		JLabel zoneBg = new JLabel();
+		zoneBg.setIcon(new ImageIcon(GameUtil.createImage(Config.IMAGE_RESOURCES_PATH +"background/tagBg.png", NAV_LABEL_WIDTH, NAV_HEIGHT)));
+		zoneBg.setBounds(Config.FRAME_WIDTH / 2 - NAV_LABEL_WIDTH / 2, 
+				NAV_PADDING_TOP, NAV_LABEL_WIDTH,
+				NAV_HEIGHT);
+		zoneBg.setOpaque(false);
+		zoneBg.setVisible(true);
 		// 导航栏
-		zoneJLabel = new JLabel(districts.get(0).getName());
+		zoneJLabel = new JLabel(districts.get(0).getName(), JLabel.CENTER);
 		zoneJLabel.setBounds(Config.FRAME_WIDTH / 2 - NAV_LABEL_WIDTH / 2, 
 				NAV_PADDING_TOP, NAV_LABEL_WIDTH,
 				NAV_HEIGHT);
-		zoneJLabel.setBackground(new Color(NAV_COLOR));
-		zoneJLabel.setOpaque(true);
+		//zoneJLabel.setBackground(new Color(NAV_COLOR));
+		zoneJLabel.setFont(new Font("Bauhaus 93", Font.ITALIC, 40));
+		zoneJLabel.setOpaque(false);
 		zoneJLabel.setVisible(true);
 		this.add(zoneJLabel);
+		this.add(zoneBg);
 		
 		Image navButtonImage = GameUtil.createImage(
 				"src/resources/images/background/navButton.png",
 				NAV_HEIGHT, NAV_HEIGHT);
-		// 左
+		// 左		
 		leftButton = new JButton();
 		leftButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -145,6 +156,7 @@ public class CombatPanel extends JPanel {
 				}
 				
 				District district = districts.get(index);
+				fightMessages = fightMessagesSet.get(index);
 				// 更换背景
 				zoneJLabel.setText(district.getName());
 				backgroundImage = createBackgroundImage(
@@ -155,6 +167,8 @@ public class CombatPanel extends JPanel {
 				removeAllFighters();
 				addFighters(district.getTeam(Team.TEAM1), Team.TEAM1);
 				addFighters(district.getTeam(Team.TEAM2), Team.TEAM2);
+				
+				fight();
 			}
 		});
 		leftButton.setIcon(new ImageIcon(navButtonImage));
@@ -174,6 +188,7 @@ public class CombatPanel extends JPanel {
 				index = index % DistrictName.values().length;
 				
 				District district = districts.get(index);
+				fightMessages = fightMessagesSet.get(index);
 				// 更换背景
 				zoneJLabel.setText(district.getName());
 				backgroundImage = createBackgroundImage(
@@ -184,6 +199,10 @@ public class CombatPanel extends JPanel {
 				removeAllFighters();
 				addFighters(district.getTeam(Team.TEAM1), Team.TEAM1);
 				addFighters(district.getTeam(Team.TEAM2), Team.TEAM2);
+				
+				
+				
+				fight();
 			}
 		});
 		rightButton.setBounds(Config.FRAME_WIDTH / 2 + NAV_LABEL_WIDTH / 2 + 20, 
@@ -196,6 +215,14 @@ public class CombatPanel extends JPanel {
 		rightButton.setVisible(true);
 		this.add(rightButton);
 		// 玩家头像
+		
+		JLabel player1Bg = new JLabel();
+		player1Bg.setIcon(new ImageIcon(GameUtil.createImage(Config.IMAGE_RESOURCES_PATH +"background/playerBg.png", PORTRAIT_SIZE, PORTRAIT_SIZE)));
+		player1Bg.setBounds(Config.FRAME_WIDTH / 5 - PORTRAIT_SIZE, PORTRAIT_PADDING_TOP, 
+				PORTRAIT_SIZE, PORTRAIT_SIZE);
+		player1Bg.setOpaque(false);
+		player1Bg.setVisible(true);
+		
 		player1 = new JLabel();
 		player1.setBounds(Config.FRAME_WIDTH / 5 - PORTRAIT_SIZE, PORTRAIT_PADDING_TOP, 
 				PORTRAIT_SIZE, PORTRAIT_SIZE);
@@ -203,10 +230,18 @@ public class CombatPanel extends JPanel {
 				GameUtil.createPlayerImage(player1Branch,
 						PORTRAIT_SIZE, PORTRAIT_SIZE, Direction.Right))
 				);
-		player1.setBackground(new Color(PORTRAIT_COLOR));
-		player1.setOpaque(true);
+		//player1.setBackground(new Color(PORTRAIT_COLOR));
+		player1.setOpaque(false);
 		player1.setVisible(true);
 		this.add(player1);
+		this.add(player1Bg);
+		
+		JLabel player2Bg = new JLabel();
+		player2Bg.setIcon(new ImageIcon(GameUtil.createImage(Config.IMAGE_RESOURCES_PATH +"background/playerBg.png", PORTRAIT_SIZE, PORTRAIT_SIZE)));
+		player2Bg.setBounds(Config.FRAME_WIDTH / 5 * 4, PORTRAIT_PADDING_TOP, 
+				PORTRAIT_SIZE, PORTRAIT_SIZE);
+		player2Bg.setOpaque(false);
+		player2Bg.setVisible(true);
 		
 		player2 = new JLabel();
 		player2.setBounds(Config.FRAME_WIDTH / 5 * 4, PORTRAIT_PADDING_TOP, 
@@ -215,31 +250,63 @@ public class CombatPanel extends JPanel {
 				GameUtil.createPlayerImage(player2Branch,
 						PORTRAIT_SIZE, PORTRAIT_SIZE, Direction.Left))
 				);
-		player2.setBackground(new Color(PORTRAIT_COLOR));
-		player2.setOpaque(true);
+		//player2.setBackground(new Color(PORTRAIT_COLOR));
+		player2.setOpaque(false);
 		player2.setVisible(true);
 		this.add(player2);
+		this.add(player2Bg);
+		
+		
+		
+		
 		// 添加士兵图标
 		addFighters(districts.get(0).getTeam(Team.TEAM1), Team.TEAM1);
 		addFighters(districts.get(0).getTeam(Team.TEAM2), Team.TEAM2);		
 		// 战斗
 		initFighterMessage();
+		fightMessages = fightMessagesSet.get(0);
 		fight();
-		
+
 		this.setVisible(true);	
 		
 	}
 	
 	private void initFighterMessage() {
-		this.fightMessages = new FightMessages();
-		this.fightMessages.addFightMessages(100, 201, Character.Student, Character.Elite, new Attack());
-		this.fightMessages.addFightMessages(101, 102, Character.Elite, Character.Student, new Defense());
-		this.fightMessages.addFightMessages(103, 203, Character.Student, Character.Student, new Attack());
-		this.fightMessages.addFightMessages(202, 203, Character.Elite, Character.Gobi, new Defense());
+		this.fightMessagesSet = new ArrayList<FightMessages>() {{
+				FightMessages tmp1 = new FightMessages();
+				tmp1.addFightMessages(100, 200, Character.Student, Character.Student, new Attack(), false);
+//				tmp1.addFightMessages(204, 200, Character.Gobi, Character.Student, new Defense(), false);
+//				tmp1.addFightMessages(103, 200, Character.Elite, Character.Student, new Attack(), true);
+//				tmp1.addFightMessages(203, 103, Character.Elite, Character.Elite, new Attack(), true);
+				
+				FightMessages tmp2 = new FightMessages();
+				tmp2.addFightMessages(100, 201, Character.Student, Character.Elite, new Attack(), true);
+//				tmp2.addFightMessages(101, 102, Character.Elite, Character.Student, new Defense(), false);
+//				tmp2.addFightMessages(103, 203, Character.Student, Character.Student, new Attack(), false);
+				
+				FightMessages tmp3 = new FightMessages();
+				tmp3.addFightMessages(100, 201, Character.Student, Character.Elite, new Attack(), true);
+				tmp3.addFightMessages(101, 102, Character.Elite, Character.Student, new Defense(), false);
+				tmp3.addFightMessages(103, 203, Character.Student, Character.Student, new Attack(), false);
+				
+				FightMessages tmp4 = new FightMessages();
+				tmp4.addFightMessages(100, 201, Character.Student, Character.Elite, new Attack(), true);
+				tmp4.addFightMessages(101, 102, Character.Elite, Character.Student, new Defense(), false);
+				tmp4.addFightMessages(103, 203, Character.Student, Character.Student, new Attack(), false);
+				
+				FightMessages tmp5 = new FightMessages();
+				tmp5.addFightMessages(100, 201, Character.Student, Character.Elite, new Attack(), true);
+				tmp5.addFightMessages(101, 102, Character.Elite, Character.Student, new Defense(), false);
+				tmp5.addFightMessages(103, 203, Character.Student, Character.Student, new Attack(), false);
+				
+				add(tmp1);add(tmp2);add(tmp3);add(tmp4);add(tmp5);
+		}};
+		
+		
+
 	}
 
 	private void drawBufferedImage() {
-
 		image = createImage(this.getWidth(), this.getHeight());
 		Graphics g = image.getGraphics();
 		g.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
@@ -346,6 +413,7 @@ public class CombatPanel extends JPanel {
 	};
 	
 	private void fight() {
+		System.out.println(fightMessages);
 		if(fightMessages.hasNext()) {
 			JLabel actor = fightMessages.getActorTeam() == Team.TEAM1 
 					? fighters1.get(fightMessages.getActorIndex())
@@ -358,16 +426,20 @@ public class CombatPanel extends JPanel {
 			Character actorCharacter = fightMessages.getActorCharacter();
 			Character recipientCharacter = fightMessages.getRecipientCharacter();
 			Strategy strategy = fightMessages.getStrategie();
+			Boolean isDead = fightMessages.isDead();
 
-			Timer actionTimer = actionTimer(actor, recipient, actorCharacter, recipientCharacter, strategy);
+			Timer actionTimer = actionTimer(actor, recipient, actorCharacter, recipientCharacter, strategy, isDead);
 			actionTimer.start();
+			System.out.println(actor);
+			System.out.println(actionTimer);
+			actionTimer = null;
 		}else {
 			System.out.println("All fights completed");
 		}
 	}
 	
 	private Timer actionTimer(JLabel actor, JLabel recipient, Character actorCharacter, Character recipientCharacter,
-			Strategy strategy) {
+			Strategy strategy, Boolean isDead) {
 		return new Timer(DELAY_TIME, new ActionListener() {
 			int cnt = 0;
 
@@ -377,6 +449,7 @@ public class CombatPanel extends JPanel {
 			Animation healAnimation = animations.get(actorCharacter).get(Action.Taunt);
 			Animation rIdleAnimation = animations.get(recipientCharacter).get(Action.Idle);
 			Animation aIdleAnimation = animations.get(actorCharacter).get(Action.Idle);
+			Animation dyingAnimation = animations.get(recipientCharacter).get(Action.Dying);
 			
 			Point aPoint = actor.getLocation();
 			Point rPoint = recipient.getLocation();
@@ -397,12 +470,12 @@ public class CombatPanel extends JPanel {
 
 			Boolean isArrived = false;
 			Boolean isBack = false;
-
 			int attackFrame = 11;
 			int hurtStartFrame = 3;
 			int healFrame = 17;
+			int dyingFrame = 14;
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
 				// 走到目的地
 				if (!isArrived) {
 					if(!moveRectangleToTarget(target, aPoint, speedX, speedY))
@@ -418,18 +491,25 @@ public class CombatPanel extends JPanel {
 					// 攻击策略
 					if (strategy instanceof Attack) {
 						if (cnt < attackFrame) {
-							attackAnimation.drawNextFrame(actor, aPoint.x, aPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT, aDirection);
+							attackAnimation.drawNextFrame(actor, aPoint.x, aPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT,
+									aDirection);
 						}
-						if (cnt > hurtStartFrame && cnt <= hurtStartFrame + attackFrame) {
-							hurtAnimation.drawNextFrame(recipient, rPoint.x, rPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT, rDirection);
+						if (!isDead && cnt > hurtStartFrame && cnt <= hurtStartFrame + attackFrame) {
+							hurtAnimation.drawNextFrame(recipient, rPoint.x, rPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT,
+									rDirection);
+						} else if (isDead && cnt > hurtStartFrame && cnt <= dyingFrame + attackFrame) {
+							dyingAnimation.drawNextFrame(recipient, rPoint.x, rPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT,
+									rDirection);
 						} else {
-							rIdleAnimation.drawNextFrame(recipient, rPoint.x, rPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT, rDirection);
+							rIdleAnimation.drawNextFrame(recipient, rPoint.x, rPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT,
+									rDirection);
 						}
 					// 防御策略
 					} else if (strategy instanceof Defense) {
 						// 方向互换
 						healAnimation.drawNextFrame(actor, aPoint.x, aPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT, rDirection);
-						rIdleAnimation.drawNextFrame(recipient, rPoint.x, rPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT, aDirection);
+						if(!isDead)
+							rIdleAnimation.drawNextFrame(recipient, rPoint.x, rPoint.y, FIGHTER_WIDTH, FIGHTER_HEIGHT, aDirection);
 					}
 					cnt++;
 					if (cnt > Math.max(healFrame, attackFrame + hurtStartFrame)) {
@@ -438,6 +518,7 @@ public class CombatPanel extends JPanel {
 						hurtAnimation.setIndex(0);
 						rIdleAnimation.setIndex(0);
 						healAnimation.setIndex(0);
+						dyingAnimation.setIndex(0);
 						System.out.println("act");
 					}
 						
