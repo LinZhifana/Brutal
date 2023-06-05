@@ -1,6 +1,6 @@
 package classes.model.characters.fighters.strategies;
 
-import classes.model.characters.fighters.students.Student;
+import classes.model.characters.fighters.studentsSep.Student;
 
 /**
  * Represents the attack strategy.
@@ -54,8 +54,33 @@ public class Attack implements Strategy {
         }
     }
 
+<<<<<<< Updated upstream
     @Override
     public String toString() {
         return "Attack";
     }
+=======
+	@Override
+	public String toString() {
+		return "Attack";
+	}
+
+	@Override
+	public int fight(classes.model.characters.fighters.students.Student attacker,
+			classes.model.characters.fighters.students.Student attacked) {
+		java.util.Random random = new java.util.Random();
+		int damageAmmout = 0;
+		int randn = random.nextInt(101);
+		if (randn <= 40 + 3 * attacker.getDexterity()) {
+			double attackCoef = random.nextDouble();
+			double damageCoef = Math.max(0, Math.min(100, 10 * attacker.getStrength() - 5 * attacked.getResistance()))
+					/ 100;
+			int refDamage = 10;
+			damageAmmout = (int) (attackCoef * (1 + damageCoef) * refDamage);
+			attacked.setCredits(attacked.getCredits() - damageAmmout);
+		}
+		return -damageAmmout;
+		
+	}
+>>>>>>> Stashed changes
 }

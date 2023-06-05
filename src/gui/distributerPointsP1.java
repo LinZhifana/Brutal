@@ -10,12 +10,21 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
+<<<<<<< Updated upstream
 import classes.model.characters.fighters.students.Student;
 import classes.model.characters.fighters.students.GobiMaster;
 import classes.model.characters.fighters.strategies.Attack;
 import classes.model.characters.fighters.strategies.Defense;
 import classes.model.characters.fighters.strategies.Random;
 import classes.model.characters.fighters.students.EliteStudent;
+=======
+import classes.model.characters.fighters.studentsSep.Student;
+import classes.model.characters.fighters.studentsSep.GobiMaster;
+import classes.model.characters.fighters.strategies.Attack;
+import classes.model.characters.fighters.strategies.Defense;
+import classes.model.characters.fighters.strategies.Random;
+import classes.model.characters.fighters.studentsSep.EliteStudent;
+>>>>>>> Stashed changes
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,6 +33,11 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+<<<<<<< Updated upstream
+=======
+import java.util.Collections;
+import java.util.Comparator;
+>>>>>>> Stashed changes
 import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -86,11 +100,19 @@ public class distributerPointsP1 {
 		this.creditRest = creditRest;
 	}
 
+<<<<<<< Updated upstream
 	public ArrayList<Student> getFightersBibli() {
 		return fightersBibli;
 	}
 
 	public ArrayList<Student> getFightersBureauEtu() {
+=======
+	public static ArrayList<Student> getFightersBibli() {
+		return fightersBibli;
+	}
+
+	public static ArrayList<Student> getFightersBureauEtu() {
+>>>>>>> Stashed changes
 		return fightersBureauEtu;
 	}
 
@@ -1026,11 +1048,29 @@ public class distributerPointsP1 {
 		
 		
 	}
+<<<<<<< Updated upstream
 	
 	private void checkOver() {
 		if(distributerPointsP1.fightersBibli.size()+distributerPointsP1.fightersAdmin.size()+
 				distributerPointsP1.fightersBureauEtu.size()+distributerPointsP1.fightersHalles.size()+
 				distributerPointsP1.fightersSportive.size()+distributerPointsP1.reservists.size()>19) {
+=======
+	//==================================>19 original
+	private void checkOver() {
+		if(distributerPointsP1.fightersBibli.size()+distributerPointsP1.fightersAdmin.size()+
+				distributerPointsP1.fightersBureauEtu.size()+distributerPointsP1.fightersHalles.size()+
+				distributerPointsP1.fightersSportive.size()+distributerPointsP1.reservists.size()>2) {
+			fightersBibli.sort(Comparator.comparing(Student::getInitiative));
+	        Collections.reverse(fightersBibli);
+	        fightersAdmin.sort(Comparator.comparing(Student::getInitiative));
+	        Collections.reverse(fightersAdmin);
+	        fightersBureauEtu.sort(Comparator.comparing(Student::getInitiative));
+	        Collections.reverse(fightersBureauEtu);
+	        fightersHalles.sort(Comparator.comparing(Student::getInitiative));
+	        Collections.reverse(fightersHalles);
+	        fightersSportive.sort(Comparator.comparing(Student::getInitiative));
+	        Collections.reverse(fightersSportive);
+>>>>>>> Stashed changes
 			distributerPointsP2.distributer();
 			frame.dispose();
 		}

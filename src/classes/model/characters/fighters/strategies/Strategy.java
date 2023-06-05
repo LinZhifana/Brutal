@@ -10,11 +10,20 @@ public interface Strategy {
     /**
      * Make a fighter fight another one.
      *
+<<<<<<< Updated upstream
      * @see Student
      * @param f1 fighter 1
      * @param f2 fighter 2
      */
     void fight(Student f1, Student f2);
+=======
+     * @see SStudent
+     * @param student fighter 1
+     * @param fighter fighter 2
+     */
+    int fight(classes.model.characters.fighters.studentsSep.Student student, classes.model.characters.fighters.studentsSep.Student fighter);
+    int fight(Student f1, Student f2);
+>>>>>>> Stashed changes
 
     /**
      * Get strategy.

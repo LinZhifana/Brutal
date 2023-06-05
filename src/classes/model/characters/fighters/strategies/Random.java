@@ -50,4 +50,13 @@ public class Random implements Strategy {
     public String toString() {
         return "Random";
     }
+
+	@Override
+	public int fight(classes.model.characters.fighters.studentsSep.Student f1,
+			classes.model.characters.fighters.studentsSep.Student f2) {
+		this.setStrategy();
+        return this.strategy.fight(f1, f2);
+	}
+
+	
 }

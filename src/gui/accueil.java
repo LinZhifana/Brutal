@@ -17,7 +17,11 @@ public class accueil {
 	/**
 	 * Launch the application.
 	 */
+<<<<<<< Updated upstream
 	public static void main(String[] args) {
+=======
+	public static void startAccueil() {
+>>>>>>> Stashed changes
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

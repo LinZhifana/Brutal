@@ -56,4 +56,25 @@ public class Defense implements Strategy {
     public String toString() {
         return "Defense";
     }
+
+	@Override
+	public int fight(classes.model.characters.fighters.studentsSep.Student healer,
+			classes.model.characters.fighters.studentsSep.Student fighterToHeal) {
+		java.util.Random random = new java.util.Random();
+        int healingAmount = 0;
+        int randn = random.nextInt(101);
+        if(0 <= randn && randn <= 20 + 6*healer.getDexterity()) {
+            double healingCoef = random.nextDouble() * 0.6;
+            healingAmount = (int) (healingCoef * (10 + fighterToHeal.getConstitution()));
+            int totalHeal = Math.min(fighterToHeal.getCredits() + healingAmount, fighterToHeal.getCredits() + fighterToHeal.getConstitution());
+            fighterToHeal.setCredits(totalHeal);
+        }
+        return healingAmount;
+		
+	}
+
+	
+
+
+	
 }
