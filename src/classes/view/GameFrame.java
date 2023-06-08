@@ -7,19 +7,22 @@ import classes.controller.GameUtil;
 import classes.model.battlefields.District;
 import classes.model.characters.fighters.students.Student;
 import classes.model.characters.fighters.students.Student.Character;
-import classes.model.characters.fighters.studentsSep.*;
-
 import classes.model.characters.players.Player.Branch;
 import classes.model.characters.players.Player.Team;
 import gui.distributerPointsP1;
-import gui.distributerPointsP2;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GameFrame extends JFrame{
 
+	private ArrayList<District> districts;
+	private static int fois=0;
+	
 	public GameFrame(ArrayList<District> districts) {
+		this.districts = districts;
 		this.setTitle("War Game");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);// 固定窗体
@@ -38,16 +41,45 @@ public class GameFrame extends JFrame{
 
 	private void init(ArrayList<District> districts) {
 		CombatPanel combatPanel = new CombatPanel(districts,Branch.ISI, Branch.GM);
-		//ScoreboardPanel scoreboardPanel = new ScoreboardPanel(Branch.ISI, Branch.GM);
-		//this.add(scoreboardPanel);
+		fois++;
 		this.add(combatPanel);
 		this.setVisible(true);		
 		
+		
+		
+		JButton skipButton = new JButton("skip");
+		skipButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				// 连接新窗口
+				if(fois>2) {
+					ScoreboardFrame scoreboardFrame = new ScoreboardFrame();
+				}else {
+					distributerPointsP1.distributer();
+					
+				}
+				
+			}
+		});
+		skipButton.setFont(new Font("Bauhaus 93", Font.ITALIC, 40));
+		skipButton.setBounds(Config.FRAME_WIDTH/2 - 455/2, Config.FRAME_HEIGHT - 100, 450, 55);
+		skipButton.setContentAreaFilled(false);
+		skipButton.setBorderPainted(false);
+		skipButton.setVisible(true);
+		
+		JLabel zoneBg = new JLabel();
+		zoneBg.setIcon(new ImageIcon(GameUtil.createImage(Config.IMAGE_RESOURCES_PATH +"background/tagBg.png", 450, 55)));
+		zoneBg.setBounds(Config.FRAME_WIDTH/2 - 450/2, Config.FRAME_HEIGHT - 100, 450, 55);
+		zoneBg.setOpaque(false);
+		zoneBg.setVisible(true);
+		
+		combatPanel.add(skipButton);
+		combatPanel.add(zoneBg);
 		GameUtil.task(5, ()->{
-			combatPanel.repaint();
-			//scoreboardPanel.repaint();
+			combatPanel.repaint();			
 		});
 	}
+
 
 	public static void startFrame() {
 		String[] districtNames = { "Library", "Student office", "Administrative district", "Industrial halls",
@@ -62,58 +94,77 @@ public class GameFrame extends JFrame{
 			}
 		};
 		
-		ArrayList<Student> students1 = new ArrayList<Student>(); 
-		for(classes.model.characters.fighters.studentsSep.Student stu : distributerPointsP1.getFightersBibli()){
-			if(stu instanceof GobiMaster) {
-				students1.add(Student.createStudent(Character.Gobi,stu.getFirstname(),stu.getLastName()));
-			}else if(stu instanceof EliteStudent) {
-				students1.add(Student.createStudent(Character.Elite,stu.getFirstname(),stu.getLastName()));
-			}else {
-				students1.add(Student.createStudent(Character.Student,stu.getFirstname(),stu.getLastName()));
+		ArrayList<Student> students1 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Student,"3","001"));
+				add(Student.createStudent(Character.Student,"3","002"));
+				add(Student.createStudent(Character.Student,"3","003"));
+				add(Student.createStudent(Character.Elite,"2","004"));
+				add(Student.createStudent(Character.Gobi,"1","005"));
+
 			}
-			
-				}
-		ArrayList<Student> students2 = new ArrayList<Student>() ;
-		for(classes.model.characters.fighters.studentsSep.Student stu : distributerPointsP2.getFightersBibli()){
-			if(stu instanceof GobiMaster) {
-				students2.add(Student.createStudent(Character.Gobi,stu.getFirstname(),stu.getLastName()));
-			}else if(stu instanceof EliteStudent) {
-				students2.add(Student.createStudent(Character.Elite,stu.getFirstname(),stu.getLastName()));
-			}else {
-				students2.add(Student.createStudent(Character.Student,stu.getFirstname(),stu.getLastName()));
+		};
+		ArrayList<Student> students2 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Student,"3","201"));
+				add(Student.createStudent(Character.Student,"3","202"));
+				add(Student.createStudent(Character.Elite,"3","203"));
+				add(Student.createStudent(Character.Elite,"2","204"));
+				add(Student.createStudent(Character.Gobi,"1","205"));
+
 			}
-			
-				}
+		};
 		
-		ArrayList<Student> students3 = new ArrayList<Student>();
-		for(classes.model.characters.fighters.studentsSep.Student stu : distributerPointsP1.getFightersBureauEtu()){
-			if(stu instanceof GobiMaster) {
-				students3.add(Student.createStudent(Character.Gobi,stu.getFirstname(),stu.getLastName()));
-			}else if(stu instanceof EliteStudent) {
-				students3.add(Student.createStudent(Character.Elite,stu.getFirstname(),stu.getLastName()));
-			}else {
-				students3.add(Student.createStudent(Character.Student,stu.getFirstname(),stu.getLastName()));
+		ArrayList<Student> students3 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Student,"3","001"));
+				add(Student.createStudent(Character.Student,"3","002"));
+				add(Student.createStudent(Character.Elite,"3","003"));
+				add(Student.createStudent(Character.Elite,"2","004"));
+				add(Student.createStudent(Character.Gobi,"1","005"));
+
 			}
-			
-				}
-		ArrayList<Student> students4 = new ArrayList<Student>();
-		for(classes.model.characters.fighters.studentsSep.Student stu : distributerPointsP2.getFightersBureauEtu()){
-			if(stu instanceof GobiMaster) {
-				students4.add(Student.createStudent(Character.Gobi,stu.getFirstname(),stu.getLastName()));
-			}else if(stu instanceof EliteStudent) {
-				students4.add(Student.createStudent(Character.Elite,stu.getFirstname(),stu.getLastName()));
-			}else {
-				students4.add(Student.createStudent(Character.Student,stu.getFirstname(),stu.getLastName()));
+		};
+		ArrayList<Student> students4 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Student,"3","201"));
+				add(Student.createStudent(Character.Student,"3","202"));
+				add(Student.createStudent(Character.Elite,"3","203"));
+				add(Student.createStudent(Character.Elite,"2","204"));
+				add(Student.createStudent(Character.Gobi,"1","205"));
+
 			}
-			
-				}
+		};
 		
-		/*studentsP1Lib.forEach(s->districts.get(0).addFighterTeam(s, Team.TEAM1));
-		studentsP2Lib.forEach(s->districts.get(0).addFighterTeam(s, Team.TEAM2));
+		ArrayList<Student> students5 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Elite,"2","004"));
+				add(Student.createStudent(Character.Gobi,"1","005"));
+
+			}
+		};
+		ArrayList<Student> students6 = new ArrayList<Student>() {
+			{
+				add(Student.createStudent(Character.Elite,"2","204"));
+				add(Student.createStudent(Character.Gobi,"1","205"));
+
+			}
+		};
 		
-		studentsP1Bur.forEach(s->districts.get(1).addFighterTeam(s, Team.TEAM1));
-		studentsP2Bur.forEach(s->districts.get(1).addFighterTeam(s, Team.TEAM2));*/
+		students1.forEach(s->districts.get(0).addFighterTeam(s, Team.TEAM1));
+		students2.forEach(s->districts.get(0).addFighterTeam(s, Team.TEAM2));
 		
+		students3.forEach(s->districts.get(1).addFighterTeam(s, Team.TEAM1));
+		students4.forEach(s->districts.get(1).addFighterTeam(s, Team.TEAM2));
+		
+		students5.forEach(s->districts.get(2).addFighterTeam(s, Team.TEAM1));
+		students6.forEach(s->districts.get(2).addFighterTeam(s, Team.TEAM2));
+		
+		students5.forEach(s->districts.get(3).addFighterTeam(s, Team.TEAM1));
+		students6.forEach(s->districts.get(3).addFighterTeam(s, Team.TEAM2));
+		
+		students5.forEach(s->districts.get(4).addFighterTeam(s, Team.TEAM1));
+		students6.forEach(s->districts.get(4).addFighterTeam(s, Team.TEAM2));
 		
 		new GameFrame(districts);
 	}

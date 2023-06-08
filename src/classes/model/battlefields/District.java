@@ -1,7 +1,7 @@
 package classes.model.battlefields;
 
 import classes.model.characters.fighters.students.Student;
-import classes.model.characters.players.Team;
+import classes.model.characters.players.Player.Team;
 
 import java.util.ArrayList;
 
@@ -15,6 +15,13 @@ public class District {
     private final ArrayList<Student> team1;
     private final ArrayList<Student> team2;
 
+    public enum DistrictName{
+    	Library,
+    	StudentOffice,
+    	Admin,
+    	Industry,
+    	Sport
+    }
     /**
      * Creates a district with the specified name.
      *

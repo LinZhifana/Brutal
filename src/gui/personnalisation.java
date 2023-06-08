@@ -57,8 +57,6 @@ public class personnalisation {
 	public static void setNameP2(String nameP2) {
 		personnalisation.nameP2 = nameP2;
 	}
-<<<<<<< Updated upstream
-=======
 	
 	public JTextField getP1NameInput() {
         return textFieldP1;
@@ -67,7 +65,6 @@ public class personnalisation {
 	public JTextField getP2NameInput() {
         return textFieldP2;
     }
->>>>>>> Stashed changes
 
 	/**
 	 * Launch the application.

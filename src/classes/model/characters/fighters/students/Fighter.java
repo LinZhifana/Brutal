@@ -11,5 +11,5 @@ public interface Fighter {
      *
      * @param fighter The fighter to combat
      */
-    void fight(Student fighter);
+    int fight(Student fighter);
 }
