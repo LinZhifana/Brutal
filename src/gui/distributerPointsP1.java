@@ -1033,7 +1033,7 @@ public class distributerPointsP1 {
 	private void checkOver() {
 		if(distributerPointsP1.fightersBibli.size()+distributerPointsP1.fightersAdmin.size()+
 				distributerPointsP1.fightersBureauEtu.size()+distributerPointsP1.fightersHalles.size()+
-				distributerPointsP1.fightersSportive.size()+distributerPointsP1.reservists.size()>2) {
+				distributerPointsP1.fightersSportive.size()+distributerPointsP1.reservists.size()>0) {
 			fightersBibli.sort(Comparator.comparing(Student::getInitiative));
 	        Collections.reverse(fightersBibli);
 	        fightersAdmin.sort(Comparator.comparing(Student::getInitiative));

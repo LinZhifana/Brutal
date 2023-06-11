@@ -277,9 +277,9 @@ public class CombatPanel extends JPanel {
 		this.fightMessagesSet = new ArrayList<FightMessages>() {{
 				FightMessages tmp1 = new FightMessages();
 				tmp1.addFightMessages(100, 200, Character.Student, Character.Student, new Attack(), false);
-//				tmp1.addFightMessages(204, 200, Character.Gobi, Character.Student, new Defense(), false);
-//				tmp1.addFightMessages(103, 200, Character.Elite, Character.Student, new Attack(), true);
-//				tmp1.addFightMessages(203, 103, Character.Elite, Character.Elite, new Attack(), true);
+				tmp1.addFightMessages(204, 200, Character.Gobi, Character.Student, new Defense(), false);
+				tmp1.addFightMessages(103, 200, Character.Elite, Character.Student, new Attack(), true);
+				tmp1.addFightMessages(203, 103, Character.Elite, Character.Elite, new Attack(), true);
 				
 				FightMessages tmp2 = new FightMessages();
 				tmp2.addFightMessages(100, 201, Character.Student, Character.Elite, new Attack(), true);

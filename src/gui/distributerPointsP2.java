@@ -1031,7 +1031,7 @@ public class distributerPointsP2 {
 	private void checkOver() {
 		if(distributerPointsP2.fightersBibli.size()+distributerPointsP2.fightersAdmin.size()+
 				distributerPointsP2.fightersBureauEtu.size()+distributerPointsP2.fightersHalles.size()+
-				distributerPointsP2.fightersSportive.size()+distributerPointsP2.reservists.size()>3) {
+				distributerPointsP2.fightersSportive.size()+distributerPointsP2.reservists.size()>0) {
 			fightersBibli.sort(Comparator.comparing(Student::getInitiative));
 	        Collections.reverse(fightersBibli);
 	        fightersAdmin.sort(Comparator.comparing(Student::getInitiative));
@@ -1042,7 +1042,8 @@ public class distributerPointsP2 {
 	        Collections.reverse(fightersHalles);
 	        fightersSportive.sort(Comparator.comparing(Student::getInitiative));
 	        Collections.reverse(fightersSportive);
-			classes.view.GameFrame.startFrame();
+			//classes.view.GameFrame.startFrame();
+	        mapDistricts.startMap();
 			frame.dispose();
 		}
 	}
